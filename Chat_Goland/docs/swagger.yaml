@@ -1,0 +1,93 @@
+basePath: /
+definitions:
+  Create.UserCreateRequest:
+    properties:
+      account:
+        type: string
+      createdTime:
+        type: string
+      password:
+        type: string
+    type: object
+  Login.LoginRequest:
+    properties:
+      account:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: Gin Swagger API Jeter
+  version: "1.0"
+paths:
+  /user/Create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserCreate Data
+        in: body
+        name: UserCreateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/Create.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Created User Failed
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create User
+      tags:
+      - Login
+  /user/Login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user with account and password credentials
+      parameters:
+      - description: Login credentials
+        in: body
+        name: LoginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/Login.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully jwt
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: User Login
+      tags:
+      - Login
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
