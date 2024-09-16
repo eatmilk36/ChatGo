@@ -1,7 +1,7 @@
 package Test
 
 import (
-	"chat/Repositories/models"
+	"Chat_Goland/Repositories/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"testing"

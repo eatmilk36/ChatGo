@@ -1,10 +1,10 @@
 package Login
 
 import (
+	"Chat_Goland/Repositories/models"
+	"Chat_Goland/Test"
+	"Chat_Goland/Test/Mock"
 	"bytes"
-	"chat/Repositories/models"
-	"chat/Test"
-	"chat/Test/Mock"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

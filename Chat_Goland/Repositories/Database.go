@@ -1,7 +1,7 @@
 package Repositories
 
 import (
-	"chat/Config"
+	"Chat_Goland/Config"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

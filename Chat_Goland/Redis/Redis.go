@@ -1,7 +1,7 @@
 package Redis
 
 import (
-	"chat/Config"
+	"Chat_Goland/Config"
 	"context"
 	"errors"
 	"fmt"
@@ -117,7 +117,7 @@ func (r *RedisService) SaveUserLogin(ctx context.Context, username string, jwt s
 	}
 
 	// 設置過期時間
-	err = r.client.Expire(ctx, "LoginUser:"+username, time.Second*10).Err()
+	err = r.client.Expire(ctx, "LoginUser:"+username, time.Minute*30).Err()
 	if err != nil {
 		return err
 	}

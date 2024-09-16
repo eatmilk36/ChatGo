@@ -1,7 +1,7 @@
 package Ineterface
 
 import (
-	"chat/Repositories/models"
+	"Chat_Goland/Repositories/models"
 )
 
 type UserRepository interface {

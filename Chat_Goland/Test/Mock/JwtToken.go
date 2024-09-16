@@ -1,7 +1,7 @@
 package Mock
 
 import (
-	"chat/Common"
+	"Chat_Goland/Common"
 	"github.com/stretchr/testify/mock"
 )
 

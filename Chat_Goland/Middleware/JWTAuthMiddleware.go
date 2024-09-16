@@ -1,7 +1,7 @@
 package Middleware
 
 import (
-	"chat/Common"
+	"Chat_Goland/Common"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

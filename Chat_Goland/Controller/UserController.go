@@ -1,12 +1,12 @@
 package Controller
 
 import (
-	"chat/Common"
-	"chat/Handler/User/Commands/Create"
-	"chat/Handler/User/Commands/Login"
-	"chat/Redis"
-	"chat/Repositories"
-	"chat/Repositories/models"
+	"Chat_Goland/Common"
+	"Chat_Goland/Handler/User/Commands/Create"
+	"Chat_Goland/Handler/User/Commands/Login"
+	"Chat_Goland/Redis"
+	"Chat_Goland/Repositories"
+	"Chat_Goland/Repositories/models"
 	"github.com/gin-gonic/gin"
 )
 

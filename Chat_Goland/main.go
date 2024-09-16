@@ -12,10 +12,10 @@
 package main
 
 import (
-	"chat/Controller"
-	"chat/Middleware"
-	"chat/Redis"
-	_ "chat/docs"
+	"Chat_Goland/Controller"
+	"Chat_Goland/Middleware"
+	"Chat_Goland/Redis"
+	_ "Chat_Goland/docs"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
 )

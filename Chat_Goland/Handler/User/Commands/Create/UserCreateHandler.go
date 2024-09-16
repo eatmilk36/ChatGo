@@ -1,8 +1,8 @@
 package Create
 
 import (
-	"chat/Ineterface"
-	"chat/Repositories/models"
+	"Chat_Goland/Ineterface"
+	"Chat_Goland/Repositories/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

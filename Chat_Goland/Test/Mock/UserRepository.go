@@ -1,7 +1,7 @@
 package Mock
 
 import (
-	"chat/Repositories/models"
+	"Chat_Goland/Repositories/models"
 	"github.com/stretchr/testify/mock"
 )
 

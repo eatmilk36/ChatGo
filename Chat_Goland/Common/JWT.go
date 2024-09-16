@@ -1,7 +1,7 @@
 package Common
 
 import (
-	"chat/Config"
+	"Chat_Goland/Config"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"time"

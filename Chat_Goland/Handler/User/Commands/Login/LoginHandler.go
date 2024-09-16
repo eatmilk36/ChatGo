@@ -1,7 +1,7 @@
 package Login
 
 import (
-	"chat/Ineterface"
+	"Chat_Goland/Ineterface"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
 	"net/http"
