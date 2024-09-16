@@ -1,0 +1,84 @@
+services:
+  app:
+    build:
+      context: ./Chat_Goland
+    working_dir: /app
+    command: [ "./myapp" ]
+    # volumes:
+    # - .:/app
+#    depends_on:
+#      - mysql
+#      - redis
+    ports:
+      - "8080:8080"
+    networks:
+      - app_network
+
+  cron:
+    container_name: chat_cron
+    build:
+      context: ./Chat_Cron
+    working_dir: /app
+    command: ["./myapp-cron"] # 根據你的排程應用名稱修改
+#    environment:
+#      - DB_HOST=mysql
+#      - DB_PORT=3306
+#      - DB_USER=jeter
+#      - DB_PASSWORD=12345678
+#      - REDIS_HOST=redis
+#      - REDIS_PORT=6379
+#      - REDIS_PASSWORD=jeter
+#    depends_on:
+#      - mysql
+#      - redis
+    networks:
+      - app_network
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_two
+    environment:
+      MYSQL_ROOT_PASSWORD: jeter
+      MYSQL_DATABASE: chat
+      MYSQL_USER: jeter
+      MYSQL_PASSWORD: 12345678
+    ports:
+      - "3306:3306"
+      # volumes:
+      # - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  redis:
+    image: redis:6
+    container_name: redis_two
+    command: >
+      sh -c "redis-server --requirepass jeter --save '' --appendonly no &
+             while ! redis-cli -h 127.0.0.1 -p 6379 -a jeter ping; do
+             echo 'Waiting for Redis to start...';
+             sleep 1;
+             done;
+             redis-cli -h 127.0.0.1 -p 6379 -a jeter CONFIG SET notify-keyspace-events Ex &&
+             tail -f /dev/null"
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
+      # volumes:
+      # mysql_data:
+      # driver: local
+      # driver_opts:
+      # type: none
+      # o: bind
+      # device: /mnt/c/Users/jeter_hsu/Desktop/docker/mysql
+      # redis_data:
+      # driver: local
+      # driver_opts:
+      # type: none
+      # o: bind
+      # device: /mnt/c/Users/jeter_hsu/Desktop/docker/redis
+
+networks:
+  app_network:
+    driver: bridge
