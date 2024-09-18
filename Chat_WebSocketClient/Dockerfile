@@ -14,10 +14,10 @@ COPY . ./
 RUN ls -al /app
 
 # 編譯 Go 程式
-RUN go build -o myapp-cron .
+RUN go build -o myapp-socket-client .
 
-# 確保 myapp-cron 擁有執行權限
-RUN chmod +x myapp-cron
+# 確保 myapp-socket-client 擁有執行權限
+RUN chmod +x myapp-socket-client
 
 # 設定執行命令
-CMD ["./myapp-cron"]
+CMD ["./myapp-socket-client"]
