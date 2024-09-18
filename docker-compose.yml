@@ -1,14 +1,15 @@
 services:
   app:
+    container_name: chat
     build:
       context: ./Chat_Goland
     working_dir: /app
     command: [ "./myapp" ]
     # volumes:
     # - .:/app
-#    depends_on:
-#      - mysql
-#      - redis
+    depends_on:
+      - mysql
+      - redis
     ports:
       - "8080:8080"
     networks:
@@ -28,9 +29,9 @@ services:
 #      - REDIS_HOST=redis
 #      - REDIS_PORT=6379
 #      - REDIS_PASSWORD=jeter
-#    depends_on:
-#      - mysql
-#      - redis
+    depends_on:
+      - mysql
+      - redis
     networks:
       - app_network
 

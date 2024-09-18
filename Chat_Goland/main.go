@@ -15,9 +15,12 @@ import (
 	"Chat_Goland/Controller"
 	"Chat_Goland/Middleware"
 	"Chat_Goland/Redis"
+	"Chat_Goland/WebSocket"
 	_ "Chat_Goland/docs"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -30,5 +33,18 @@ func main() {
 	server.Use(Middleware.JWTAuthMiddleware())
 
 	// 啟動Router
-	Controller.RouterInit(server)
+	go Controller.RouterInit(server)
+
+	// 註冊 WebSocket 處理器
+	http.HandleFunc("/ws", WebSocket.WsHandler)
+
+	// 啟動 HTTP 伺服器
+	log.Println("伺服器啟動中，監聽端口 :52333")
+	err := http.ListenAndServe("127.0.0.1:52333", nil)
+	if err != nil {
+		log.Fatal("伺服器啟動失敗:", err)
+	}
+
+	// 保持運行
+	select {}
 }
