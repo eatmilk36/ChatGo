@@ -1,6 +1,8 @@
 package Controller
 
 import (
+	"Chat_Goland/Middleware"
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -8,19 +10,28 @@ import (
 	"net/http"
 )
 
-func RouterInit(server *gin.Engine) {
+func RouterInit() {
+	server := gin.Default()
 
 	server.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"http://127.0.0.1:3000", "http://172.30.240.1:3000", "http://localhost:3000", "http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
 
 	server.Use(func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Next()
+		// 檢查 CORS 頭部是否正確被設置
+		fmt.Println("CORS Origin:", c.Writer.Header().Get("Access-Control-Allow-Origin"))
 	})
+
+	// 啟動中間層檢查JWT
+	server.Use(Middleware.JWTAuthMiddleware())
+	//server.Use(func(c *gin.Context) {
+	//	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	//	c.Next()
+	//})
 
 	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
