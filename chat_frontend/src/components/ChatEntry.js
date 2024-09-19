@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import '../css/ChatEntry.css'; // 加上 CSS 來做簡單的樣式
 import axios from "../AxiosInterceptors";
+import {useNavigate} from 'react-router-dom';
 
 function ChatEntry() {
     const [lists, setLists] = useState([]);
+    const navigate = useNavigate();
 
     // 使用 useEffect 發送 API 請求來獲取資料
     useEffect(() => {
@@ -16,6 +18,7 @@ function ChatEntry() {
             })
             .catch((error) => {
                 console.error("獲取資料時發生錯誤:", error);
+                navigate('/login');
             });
     }, []);
 
