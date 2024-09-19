@@ -4,6 +4,7 @@ import (
 	"Chat_Goland/Config"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
+	"strings"
 	"time"
 )
 
@@ -45,7 +46,7 @@ func (j Jwt) GenerateJWT(username string) (string, error) {
 
 func (j Jwt) ValidateJWT(tokenString string) (*MyCustomClaims, error) {
 	// 解析並驗證 JWT
-	token, err := jwt.ParseWithClaims(tokenString, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(strings.TrimPrefix(tokenString, "Bearer "), &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		// 確認使用的簽名方法是否正確
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

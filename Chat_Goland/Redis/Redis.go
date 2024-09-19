@@ -2,7 +2,9 @@ package Redis
 
 import (
 	"Chat_Goland/Config"
+	"Chat_Goland/Repositories/models/RedisModels"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis/v8"
@@ -74,6 +76,16 @@ func (r *RedisService) ListRange(ctx context.Context, key string, start, stop in
 	return result, nil
 }
 
+// ListRemove 刪除 List 中的特定值
+func (r *RedisService) ListRemove(ctx context.Context, key string, count int64, value string) error {
+	// count 表示要刪除的數量，正數表示從頭部開始刪除，負數表示從尾部開始刪除，0 表示刪除所有匹配的元素
+	err := r.client.LRem(ctx, key, count, value).Err()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // HashSet 設置 Hash 中的字段值
 func (r *RedisService) HashSet(ctx context.Context, key, field, value string) error {
 	err := r.client.HSet(ctx, key, field, value).Err()
@@ -92,6 +104,23 @@ func (r *RedisService) HashGet(ctx context.Context, key, field string) (string, 
 		return "", err
 	}
 	return result, nil
+}
+
+func (r *RedisService) GetChatList(ctx context.Context) ([]string, error) {
+	listRange, err := r.ListRange(ctx, "ChatRoomList", 0, -1)
+	if err != nil {
+		return nil, err
+	}
+	return listRange, nil
+}
+
+func (r *RedisService) SetChatList(ctx context.Context, model RedisModels.RedisChatroomModel) error {
+	jsonData, err := json.Marshal(model)
+	if err != nil {
+		return err
+	}
+	err = r.ListPush(ctx, "ChatRoomList", string(jsonData))
+	return nil
 }
 
 func (r *RedisService) SaveUserLogin(ctx context.Context, username string, jwt string) error {

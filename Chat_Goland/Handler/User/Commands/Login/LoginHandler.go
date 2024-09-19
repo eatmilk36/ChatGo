@@ -14,7 +14,6 @@ type Handler struct {
 	jwt      Ineterface.JwtInterface
 }
 
-// NewLoginHandler 建立 LoginHandler 並注入 UserRepository
 func NewLoginHandler(userRepo Ineterface.UserRepository, redis Ineterface.RedisServiceInterface, crypto Ineterface.CryptoHelper, jwt Ineterface.JwtInterface) *Handler {
 	return &Handler{userRepo: userRepo, redis: redis, crypto: crypto, jwt: jwt}
 }

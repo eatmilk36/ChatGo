@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import axios from "../AxiosInterceptors";
+import {setToken} from "../Common/LocalStorage";
 
 const Login = () => {
     // 定義表單狀態
@@ -16,37 +17,26 @@ const Login = () => {
         if (account === '' || password === '') {
             setError('請輸入使用者名稱和密碼');
         } else {
-            // setError('');
-            // setLoading(true); // 開始加載狀態
+            setError('');
+            setLoading(true); // 開始加載狀態
 
             try {
                 // 發送 API 請求來進行後端驗證
-                const response = await axios.post('http://127.0.0.1:8080/user/Login', {
+                const response = await axios.post('http://127.0.0.1:8080/User/Login', {
                     account: account,
                     password: password,
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json', // 明確設定傳送 JSON 資料
-                    },
-                    withCredentials: true // 如果需要發送 Cookies 或者其他憑證
                 });
 
                 if (response.data === "") {
-                    alert("登入失敗")
+                    setError('登入失敗，請稍後再試');
                     return;
                 }
 
-                // 驗證成功
-                console.log('登入成功:', response.data);
-                // 轉頁到Chat
-                navigate('/chat');
+                setToken(response.data)
+                navigate('/chat/entry');
             } catch (error) {
                 // 驗證失敗
-                if (error.response) {
-                    setError('登入失敗: ' + error.response.data.message);
-                } else {
-                    setError('登入失敗，請稍後再試');
-                }
+                setError('登入失敗，請稍後再試');
             } finally {
                 setLoading(false); // 結束加載狀態
             }
@@ -62,7 +52,7 @@ const Login = () => {
     }
 
     return (
-        <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+        <div style={{maxWidth: '400px', margin: '0 auto'}}>
             <h2>登入</h2>
             <div>
                 <label htmlFor="account">使用者名稱</label>
@@ -84,7 +74,7 @@ const Login = () => {
                     placeholder="輸入密碼"
                 />
             </div>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{color: 'red'}}>{error}</p>}
             <button onClick={handleLogin} disabled={loading}>
                 {loading ? '登入中...' : '登入'}
             </button>

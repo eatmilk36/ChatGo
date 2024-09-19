@@ -28,10 +28,6 @@ func RouterInit() {
 
 	// 啟動中間層檢查JWT
 	server.Use(Middleware.JWTAuthMiddleware())
-	//server.Use(func(c *gin.Context) {
-	//	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-	//	c.Next()
-	//})
 
 	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -43,10 +39,16 @@ func RouterInit() {
 		})
 	}
 
-	user := server.Group("/user")
+	user := server.Group("/User")
 	{
 		user.POST("/Login", UserController{}.GetUser)
 		user.POST("/Create", UserController{}.CreateUser)
+	}
+
+	chatroom := server.Group("/Chatroom")
+	{
+		chatroom.GET("/List", ChatroomController{}.GetChatList)
+		chatroom.POST("/Create", ChatroomController{}.SetChatList)
 	}
 
 	err := server.Run(":8080")

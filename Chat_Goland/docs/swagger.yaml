@@ -1,5 +1,14 @@
 basePath: /
 definitions:
+  Chatroom.ChatroomCreateHandlerRequest:
+    properties:
+      hash:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   Create.UserCreateRequest:
     properties:
       account:
@@ -19,9 +28,65 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  title: Gin Swagger API Jeter
+  title: Gin Swagger API
   version: "1.0"
 paths:
+  /Chatroom/Create:
+    post:
+      consumes:
+      - application/json
+      description: Set Chatroom room
+      parameters:
+      - description: Chatroom credentials
+        in: body
+        name: ChatroomCreateHandlerRequest
+        required: true
+        schema:
+          $ref: '#/definitions/Chatroom.ChatroomCreateHandlerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Set Chatroom room list
+      tags:
+      - Chatroom
+  /Chatroom/List:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get Chatroom room list
+      tags:
+      - Chatroom
   /user/Create:
     post:
       consumes:
