@@ -1,6 +1,7 @@
 package WebSocket
 
 import (
+	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -40,6 +41,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		fmt.Println("groupName:", groupName, "message:", string(message))
 		// 轉發訊息給群組中的所有人
 		groupManager.SendToGroup(groupName, message)
 	}

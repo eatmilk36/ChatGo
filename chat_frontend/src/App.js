@@ -3,6 +3,7 @@ import Login from './components/Login';
 import {Link, Route, Routes} from "react-router-dom";
 import Home from "./components/Home";
 import ChatEntry from "./components/ChatEntry";
+import Chatroom from "./components/Chatroom";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/" element={<Home/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/chat/entry" element={<ChatEntry/>}/>
+                <Route path="/chat/chatroom/:id" element={<Chatroom/>}/>
             </Routes>
         </div>
     );

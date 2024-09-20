@@ -32,8 +32,13 @@ function ChatEntry() {
 }
 
 function List({id, name}) {
+    const navigate = useNavigate();
+
+    const EntryChatroom = () => {
+        navigate(`/chat/chatroom/${id}`);
+    };
     return (
-        <div className="list" data-key={id}>
+        <div className="list" data-key={id} onClick={EntryChatroom}>
             <h3>{name}</h3>
         </div>
     );
