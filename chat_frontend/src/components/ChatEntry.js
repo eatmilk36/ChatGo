@@ -19,7 +19,7 @@ function ChatEntry() {
                 console.error("獲取資料時發生錯誤:", error);
                 navigate('/login');
             });
-    }, []);
+    }, [navigate]);
 
     return (
         <div className="list-container">

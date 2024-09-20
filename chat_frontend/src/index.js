@@ -1,15 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css'; // 可以自訂樣式
-import {BrowserRouter as Router} from "react-router-dom";
-import App from "./App"; // 引入我們剛剛建立的 Login 元件
+import ReactDOM from 'react-dom/client'; // 使用新的 createRoot
+import './index.css';
+import { BrowserRouter as Router } from 'react-router-dom';
+import App from './App';
 
-// 將 Login 元件掛載到網頁的根元素上
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root')); // 使用 createRoot
+root.render(
     <React.StrictMode>
         <Router>
-            <App/>
+            <App />
         </Router>
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
 );

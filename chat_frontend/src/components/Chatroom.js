@@ -37,9 +37,11 @@ function Chatroom() {
 
         // 清理 WebSocket 連接
         return () => {
-            socketRef.current.close();
+            // if (socketRef.current) {
+            //     socketRef.current.close();
+            // }
         };
-    }, []);
+    }, [id, navigate]);
 
     // 發送訊息到 WebSocket 伺服器
     const sendMessage = () => {
