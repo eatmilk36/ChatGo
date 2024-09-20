@@ -38,7 +38,7 @@ function List({id, name}) {
         navigate(`/chat/chatroom/${id}`);
     };
     return (
-        <div className="list" data-key={id} onClick={EntryChatroom}>
+        <div className="chatroom-list" data-key={id} onClick={EntryChatroom}>
             <h3>{name}</h3>
         </div>
     );
