@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {getToken} from "../Common/LocalStorage";
+import axios from "../AxiosInterceptors.js";
 
 function Chatroom() {
     const navigate = useNavigate();
@@ -25,6 +26,15 @@ function Chatroom() {
             setMessages((prevMessages) => [...prevMessages, newMessage]);
         };
 
+        axios.get('/Chatroom/Message?groupName=' + id)
+            .then((response) => {
+                setMessages((prevMessages) => [...prevMessages, ...response.data]);   // 將解析後的資料保存到狀態中
+            })
+            .catch((error) => {
+                console.error("獲取資料時發生錯誤:", error);
+                // navigate('/login');
+            });
+
         // 清理 WebSocket 連接
         return () => {
             socketRef.current.close();
@@ -33,18 +43,11 @@ function Chatroom() {
 
     // 發送訊息到 WebSocket 伺服器
     const sendMessage = () => {
-        console.log(123)
-        console.log(socketRef.current)
-        console.log(socketRef.current.readyState === WebSocket.OPEN)
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            console.log('sendMessage')
             socketRef.current.send(inputValue); // 發送輸入框的值
             setInputValue(''); // 清空輸入框
         }
     };
-    // 加入群組
-    // 需要接收傳過來的參數
-    // 傳送與接收Socket資料並顯示
     return (
         <div>
             <h2>Chatroom</h2>

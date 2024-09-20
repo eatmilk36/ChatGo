@@ -10,10 +10,9 @@ function ChatEntry() {
     // 使用 useEffect 發送 API 請求來獲取資料
     useEffect(() => {
         // 假設你的 API 路徑是 'https://api.example.com/lists'
-        axios.get('http://127.0.0.1:8080/Chatroom/List')
+        axios.get('/Chatroom/List')
             .then((response) => {
                 const parsedData = response.data.map(item => JSON.parse(item));
-                console.log(parsedData); // 檢查解析後的資料
                 setLists(parsedData);    // 將解析後的資料保存到狀態中
             })
             .catch((error) => {

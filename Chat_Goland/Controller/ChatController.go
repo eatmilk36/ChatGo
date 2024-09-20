@@ -3,6 +3,7 @@ package Controller
 import (
 	ChatroomCreate "Chat_Goland/Handler/Chatroom/Commands/Create"
 	ChatroomList "Chat_Goland/Handler/Chatroom/Queries/List"
+	ChatroomGroupMessage "Chat_Goland/Handler/ChatroomGroupMessage/Queryies/List"
 	"Chat_Goland/Redis"
 	"github.com/gin-gonic/gin"
 )
@@ -52,4 +53,26 @@ func (ctrl ChatroomController) SetChatList(c *gin.Context) {
 
 	// 呼叫 業務邏輯
 	handler.SetChatroomList(c)
+}
+
+// GetGroupMessage godoc
+// @Summary 取得聊天室的群組訊息
+// @Description 根據群組名稱取得對應的聊天訊息
+// @Tags Chatroom
+// @Accept json
+// @Produce json
+// @Param GroupName query string true "群組名稱"
+// @Success 200 {array} []string "成功返回訊息列表"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 404 {object} map[string]interface{} "Not Found"
+// @Router /Chatroom/Message [get]
+func (ctrl ChatroomController) GetGroupMessage(context *gin.Context) {
+	// 初始化 RedisClient
+	redis := Redis.NewRedisService()
+
+	// 注入到 LoginHandler
+	handler := ChatroomGroupMessage.NewChatroomGroupMessageQueryHandler(redis)
+
+	// 呼叫 業務邏輯
+	handler.GetChatroomGroupMessage(context)
 }

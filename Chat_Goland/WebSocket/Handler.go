@@ -1,8 +1,10 @@
 package WebSocket
 
 import (
+	"Chat_Goland/Redis"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"golang.org/x/net/context"
 	"log"
 	"net/http"
 )
@@ -41,8 +43,22 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		go saveMessage(groupName, message)
+
 		fmt.Println("groupName:", groupName, "message:", string(message))
 		// 轉發訊息給群組中的所有人
 		groupManager.SendToGroup(groupName, message)
+	}
+}
+
+func saveMessage(name string, message []byte) {
+	fmt.Println("saveMessage")
+	ctx := context.Background()
+
+	// 使用 NewRedisService 來初始化 RedisService
+	service := Redis.NewRedisService()
+	err := service.SaveChatMessage(ctx, name, string(message))
+	if err != nil {
+		fmt.Println("saveMessage failed")
 	}
 }

@@ -49,6 +49,7 @@ func RouterInit() {
 	{
 		chatroom.GET("/List", ChatroomController{}.GetChatList)
 		chatroom.POST("/Create", ChatroomController{}.SetChatList)
+		chatroom.GET("/Message", ChatroomController{}.GetGroupMessage)
 	}
 
 	err := server.Run(":8080")

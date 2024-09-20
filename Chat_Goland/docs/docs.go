@@ -99,6 +99,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/Chatroom/Message": {
+            "get": {
+                "description": "根據群組名稱取得對應的聊天訊息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chatroom"
+                ],
+                "summary": "取得聊天室的群組訊息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "群組名稱",
+                        "name": "GroupName",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功返回訊息列表",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/user/Create": {
             "post": {
                 "consumes": [

@@ -87,6 +87,41 @@ paths:
       summary: Get Chatroom room list
       tags:
       - Chatroom
+  /Chatroom/Message:
+    get:
+      consumes:
+      - application/json
+      description: 根據群組名稱取得對應的聊天訊息
+      parameters:
+      - description: 群組名稱
+        in: query
+        name: GroupName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回訊息列表
+          schema:
+            items:
+              items:
+                type: string
+              type: array
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 取得聊天室的群組訊息
+      tags:
+      - Chatroom
   /user/Create:
     post:
       consumes:

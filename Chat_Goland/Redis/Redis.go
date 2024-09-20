@@ -106,6 +106,22 @@ func (r *RedisService) HashGet(ctx context.Context, key, field string) (string, 
 	return result, nil
 }
 
+func (r *RedisService) SaveChatMessage(ctx context.Context, groupName, message string) error {
+	err := r.ListPush(ctx, "chatroom_"+groupName, message)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *RedisService) GetChatMessage(ctx context.Context, groupName string) ([]string, error) {
+	listRange, err := r.ListRange(ctx, "chatroom_"+groupName, 0, -1)
+	if err != nil {
+		return nil, err
+	}
+	return listRange, nil
+}
+
 func (r *RedisService) GetChatList(ctx context.Context) ([]string, error) {
 	listRange, err := r.ListRange(ctx, "ChatRoomList", 0, -1)
 	if err != nil {
