@@ -1,9 +1,9 @@
 import React from 'react';
-import Login from './components/Login';
+import Login from './components/Login.js';
 import {Link, Route, Routes} from "react-router-dom";
-import Home from "./components/Home";
-import ChatEntry from "./components/ChatEntry";
-import Chatroom from "./components/Chatroom";
+import Home from "./components/Home.js";
+import ChatEntry from "./components/ChatEntry.js";
+import Chatroom from "./components/Chatroom.js";
 
 function App() {
     return (

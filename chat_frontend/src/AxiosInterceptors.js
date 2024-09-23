@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getToken} from "./Common/LocalStorage";
+import {getToken} from "./Common/LocalStorage.js";
 
 // 創建 Axios 實例
 const axiosInstance = axios.create({

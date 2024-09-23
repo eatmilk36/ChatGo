@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {getToken} from "../Common/LocalStorage";
+import {getToken} from "../Common/LocalStorage.js";
 import axios from "../AxiosInterceptors.js";
 
 function Chatroom() {
@@ -9,37 +9,41 @@ function Chatroom() {
     const socketRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const {id} = useParams();
+    let once = 0;
 
     useEffect(() => {
-
         let token = getToken();
-        if (token === undefined || token === null) {
+        if (!token) {
             navigate('/login');
+            return; // 直接返回，避免不必要的 API 呼叫
         }
 
         // 創建 WebSocket 連接
-        socketRef.current = new WebSocket('ws://127.0.0.1:52333/ws?group=' + id);
+        if (!socketRef.current) { // 檢查是否已有連接，避免重複連接
+            socketRef.current = new WebSocket('ws://127.0.0.1:52333/ws?group=' + id);
 
-        // 監聽來自伺服器的訊息
-        socketRef.current.onmessage = (event) => {
-            const newMessage = event.data;
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-        };
+            socketRef.current.onmessage = (event) => {
+                const newMessage = event.data;
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+            };
+        }
 
-        axios.get('/Chatroom/Message?groupName=' + id)
-            .then((response) => {
-                setMessages((prevMessages) => [...prevMessages, ...response.data]);   // 將解析後的資料保存到狀態中
-            })
-            .catch((error) => {
-                console.error("獲取資料時發生錯誤:", error);
-                // navigate('/login');
-            });
+        if (once === 0) {
+            once++;
+            axios.get('/Chatroom/Message?groupName=' + id)
+                .then((response) => {
+                    setMessages((prevMessages) => [...prevMessages, ...response.data]);
+                })
+                .catch((error) => {
+                    console.error("獲取資料時發生錯誤:", error);
+                });
+        }
 
         // 清理 WebSocket 連接
         return () => {
-            // if (socketRef.current) {
-            //     socketRef.current.close();
-            // }
+            if (socketRef.current) {
+                socketRef.current.close();
+            }
         };
     }, [id, navigate]);
 

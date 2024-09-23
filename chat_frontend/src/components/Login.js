@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import axios from "../AxiosInterceptors";
-import {setToken} from "../Common/LocalStorage";
+import axios from "../AxiosInterceptors.js";
+import {setToken} from "../Common/LocalStorage.js";
 
 const Login = () => {
     // 定義表單狀態

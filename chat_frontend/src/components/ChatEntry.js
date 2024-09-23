@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import '../css/ChatEntry.css'; // 加上 CSS 來做簡單的樣式
-import axios from "../AxiosInterceptors";
+import axios from "../AxiosInterceptors.js";
 import {useNavigate} from 'react-router-dom';
 
 function ChatEntry() {
