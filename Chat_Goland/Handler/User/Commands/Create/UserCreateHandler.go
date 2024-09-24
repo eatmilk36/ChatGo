@@ -9,11 +9,11 @@ import (
 
 type Handler struct {
 	userRepo Ineterface.UserRepository
-	crypto   Ineterface.CryptoHelper
+	crypto   Ineterface.CryptoService
 }
 
 // NewLoginHandler 建立 CreateHandler 並注入 UserRepository
-func NewLoginHandler(userRepo Ineterface.UserRepository, crypto Ineterface.CryptoHelper) *Handler {
+func NewLoginHandler(userRepo Ineterface.UserRepository, crypto Ineterface.CryptoService) *Handler {
 	return &Handler{userRepo: userRepo, crypto: crypto}
 }
 

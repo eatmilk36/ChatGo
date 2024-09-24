@@ -5,9 +5,9 @@ import (
 	"encoding/hex"
 )
 
-type CryptoService struct{}
+type LogService struct{}
 
-func (c *CryptoService) Md5Hash(value string) string {
+func (c *LogService) LogError(value string) string {
 	hash := md5.New()
 	hash.Write([]byte(value))
 	md5Hash := hash.Sum(nil)

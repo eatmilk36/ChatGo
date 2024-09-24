@@ -10,11 +10,11 @@ import (
 type Handler struct {
 	userRepo Ineterface.UserRepository
 	redis    Ineterface.RedisServiceInterface
-	crypto   Ineterface.CryptoHelper
-	jwt      Ineterface.JwtInterface
+	crypto   Ineterface.CryptoService
+	jwt      Ineterface.JwtServiceInterface
 }
 
-func NewLoginHandler(userRepo Ineterface.UserRepository, redis Ineterface.RedisServiceInterface, crypto Ineterface.CryptoHelper, jwt Ineterface.JwtInterface) *Handler {
+func NewLoginHandler(userRepo Ineterface.UserRepository, redis Ineterface.RedisServiceInterface, crypto Ineterface.CryptoService, jwt Ineterface.JwtServiceInterface) *Handler {
 	return &Handler{userRepo: userRepo, redis: redis, crypto: crypto, jwt: jwt}
 }
 

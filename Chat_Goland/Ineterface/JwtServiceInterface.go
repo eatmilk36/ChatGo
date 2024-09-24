@@ -4,7 +4,7 @@ import (
 	"Chat_Goland/Services"
 )
 
-type JwtInterface interface {
+type JwtServiceInterface interface {
 	GenerateJWT(username string) (string, error)
 
 	ValidateJWT(tokenString string) (*Services.MyCustomClaims, error)

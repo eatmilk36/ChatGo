@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type Jwt struct{}
+type JwtService struct{}
 
 // MyCustomClaims 定義自訂的 Claim 結構
 type MyCustomClaims struct {
@@ -17,7 +17,7 @@ type MyCustomClaims struct {
 }
 
 // GenerateJWT 產生JWT Token
-func (j Jwt) GenerateJWT(username string) (string, error) {
+func (j JwtService) GenerateJWT(username string) (string, error) {
 
 	// 設定過期時間
 	expirationTime := time.Now().Add(1 * time.Hour)
@@ -44,7 +44,7 @@ func (j Jwt) GenerateJWT(username string) (string, error) {
 	return tokenString, nil
 }
 
-func (j Jwt) ValidateJWT(tokenString string) (*MyCustomClaims, error) {
+func (j JwtService) ValidateJWT(tokenString string) (*MyCustomClaims, error) {
 	// 解析並驗證 JWT
 	token, err := jwt.ParseWithClaims(strings.TrimPrefix(tokenString, "Bearer "), &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		// 確認使用的簽名方法是否正確

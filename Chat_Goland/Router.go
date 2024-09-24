@@ -1,4 +1,4 @@
-package Services
+package main
 
 import (
 	"Chat_Goland/Controller"
@@ -6,6 +6,7 @@ import (
 	"Chat_Goland/Redis"
 	"Chat_Goland/Repositories"
 	"Chat_Goland/Repositories/Models/MySQL/User"
+	"Chat_Goland/Services"
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -72,11 +73,11 @@ func InitUserController() *Controller.UserController {
 	// 初始化 RedisClient
 	redis := Redis.NewRedisService()
 
-	// 初始化 Crypto
-	helper := &CryptoHelper{}
+	// 初始化 CryptoService
+	helper := &Services.CryptoService{}
 
-	// 初始化 Jwt
-	jwt := &Jwt{}
+	// 初始化 JwtService
+	jwt := &Services.JwtService{}
 
 	return Controller.NewUserController(
 		*repository,
