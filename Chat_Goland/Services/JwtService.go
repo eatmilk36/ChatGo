@@ -1,4 +1,4 @@
-package Common
+package Services
 
 import (
 	"Chat_Goland/Config"

@@ -1,7 +1,7 @@
 package Middleware
 
 import (
-	"Chat_Goland/Common"
+	"Chat_Goland/Services"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -20,7 +20,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		tokenString := c.GetHeader("Authorization")
 
 		// 驗證 Token
-		claims, err := Common.Jwt{}.ValidateJWT(tokenString)
+		claims, err := Services.Jwt{}.ValidateJWT(tokenString)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 			c.Abort()

@@ -1,7 +1,6 @@
-package Service
+package Services
 
 import (
-	"Chat_Goland/Common"
 	"Chat_Goland/Controller"
 	"Chat_Goland/Middleware"
 	"Chat_Goland/Redis"
@@ -74,10 +73,10 @@ func InitUserController() *Controller.UserController {
 	redis := Redis.NewRedisService()
 
 	// 初始化 Crypto
-	helper := &Common.CryptoHelper{}
+	helper := &CryptoHelper{}
 
 	// 初始化 Jwt
-	jwt := &Common.Jwt{}
+	jwt := &Jwt{}
 
 	return Controller.NewUserController(
 		*repository,

@@ -1,22 +1,22 @@
 package Controller
 
 import (
-	"Chat_Goland/Common"
 	"Chat_Goland/Handler/User/Commands/Create"
 	"Chat_Goland/Handler/User/Commands/Login"
 	"Chat_Goland/Redis"
 	"Chat_Goland/Repositories/Models/MySQL/User"
+	"Chat_Goland/Services"
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
 	userRepo     User.Repository
 	redisService Redis.RedisService
-	cryptoHelper Common.CryptoHelper
-	jwtService   Common.Jwt
+	cryptoHelper Services.CryptoHelper
+	jwtService   Services.Jwt
 }
 
-func NewUserController(userRepo User.Repository, redis Redis.RedisService, helper Common.CryptoHelper, jwt Common.Jwt) *UserController {
+func NewUserController(userRepo User.Repository, redis Redis.RedisService, helper Services.CryptoHelper, jwt Services.Jwt) *UserController {
 	return &UserController{
 		userRepo:     userRepo,
 		redisService: redis,
