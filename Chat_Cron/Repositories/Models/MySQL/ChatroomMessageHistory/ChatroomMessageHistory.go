@@ -1,6 +1,6 @@
 package ChatroomMessageHistory
 
-type ChatroomMessageHistoryRepository struct {
+type Model struct {
 	Id        int    `json:"Id" gorm:"primaryKey"`
 	UserId    int    `json:"UserId" gorm:"column:UserId"`
 	GroupName string `json:"GroupName" gorm:"column:GroupName"`
@@ -9,6 +9,6 @@ type ChatroomMessageHistoryRepository struct {
 }
 
 // TableName 指定資料表名稱為 'ChatroomMessageHistory'
-func (ChatroomMessageHistoryRepository) TableName() string {
+func (Model) TableName() string {
 	return "ChatroomMessageHistory"
 }

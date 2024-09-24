@@ -5,15 +5,28 @@ import (
 	"Chat_Goland/Handler/User/Commands/Create"
 	"Chat_Goland/Handler/User/Commands/Login"
 	"Chat_Goland/Redis"
-	"Chat_Goland/Repositories"
-	"Chat_Goland/Repositories/models"
+	"Chat_Goland/Repositories/Models/MySQL/User"
 	"github.com/gin-gonic/gin"
 )
 
-type UserController struct{}
+type UserController struct {
+	userRepo     User.Repository
+	redisService Redis.RedisService
+	cryptoHelper Common.CryptoHelper
+	jwtService   Common.Jwt
+}
+
+func NewUserController(userRepo User.Repository, redis Redis.RedisService, helper Common.CryptoHelper, jwt Common.Jwt) *UserController {
+	return &UserController{
+		userRepo:     userRepo,
+		redisService: redis,
+		cryptoHelper: helper,
+		jwtService:   jwt,
+	}
+}
 
 // GetUser Login godoc
-// @Summary User Login
+// @Summary Model Login
 // @Description Logs in a user with account and password credentials
 // @Tags Login
 // @Accept  json
@@ -21,52 +34,22 @@ type UserController struct{}
 // @Param LoginRequest body Login.LoginRequest true "Login credentials"
 // @Success 200 {object} string "Successfully jwt"
 // @Failure 400 {object} map[string]interface{} "Invalid request"
-// @Failure 404 {object} map[string]interface{} "User not found"
+// @Failure 404 {object} map[string]interface{} "Model not found"
 // @Router /user/Login [post]
 func (ctrl UserController) GetUser(c *gin.Context) {
-	database := Repositories.GormUserRepository{}.InitDatabase()
-
-	// 初始化 UserRepository
-	userRepo := models.NewGormUserRepository(database)
-
-	// 初始化 RedisClient
-	redis := Redis.NewRedisService()
-
-	// 初始化 Crypto
-	helper := &Common.CryptoHelper{}
-
-	// 初始化 Jwt
-	jwt := Common.Jwt{}
-
-	// 注入到 LoginHandler
-	loginHandler := Login.NewLoginHandler(userRepo, redis, helper, jwt)
-
-	// 呼叫 業務邏輯
-	loginHandler.LoginQueryHandler(c)
+	Login.NewLoginHandler(&ctrl.userRepo, &ctrl.redisService, &ctrl.cryptoHelper, ctrl.jwtService).LoginQueryHandler(c)
 }
 
-// CreateUser Login godoc
-// @Summary Create User
+// CreateUser godoc
+// @Summary Create Model
 // @Tags Login
 // @Accept  json
 // @Produce  json
 // @Param UserCreateRequest body Create.UserCreateRequest true "UserCreate Data"
 // @Success 200 {object} string "Successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid request"
-// @Failure 404 {object} map[string]interface{} "Created User Failed"
+// @Failure 404 {object} map[string]interface{} "Created Model Failed"
 // @Router /user/Create [post]
 func (ctrl UserController) CreateUser(c *gin.Context) {
-	database := Repositories.GormUserRepository{}.InitDatabase()
-
-	// 初始化 UserRepository
-	userRepo := models.NewGormUserRepository(database)
-
-	// 初始化 Crypto
-	helper := &Common.CryptoHelper{}
-
-	// 注入到 NewLoginHandler
-	loginHandler := Create.NewLoginHandler(userRepo, helper)
-
-	// 呼叫 業務邏輯
-	loginHandler.CreatUserCommand(c)
+	Create.NewLoginHandler(&ctrl.userRepo, &ctrl.cryptoHelper).CreatUserCommand(c)
 }

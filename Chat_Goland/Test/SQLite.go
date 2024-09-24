@@ -1,7 +1,7 @@
 package Test
 
 import (
-	"Chat_Goland/Repositories/models"
+	"Chat_Goland/Repositories/Models/MySQL/User"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"testing"
@@ -15,7 +15,7 @@ func SetupTestDB(t *testing.T) *gorm.DB {
 	}
 
 	// 自動遷移
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(&User.Model{})
 	if err != nil {
 		return nil
 	}
@@ -24,11 +24,11 @@ func SetupTestDB(t *testing.T) *gorm.DB {
 }
 
 func ResetDB(db *gorm.DB) {
-	err := db.Migrator().DropTable(&models.User{})
+	err := db.Migrator().DropTable(&User.Model{})
 	if err != nil {
 		return
 	}
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(&User.Model{})
 	if err != nil {
 		return
 	}

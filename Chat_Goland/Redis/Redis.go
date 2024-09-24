@@ -2,7 +2,7 @@ package Redis
 
 import (
 	"Chat_Goland/Config"
-	"Chat_Goland/Repositories/models/RedisModels"
+	"Chat_Goland/Repositories/Models/RedisModels"
 	"context"
 	"encoding/json"
 	"errors"

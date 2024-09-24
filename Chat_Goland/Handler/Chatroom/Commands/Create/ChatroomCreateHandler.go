@@ -2,7 +2,7 @@ package Chatroom
 
 import (
 	"Chat_Goland/Ineterface"
-	"Chat_Goland/Repositories/models/RedisModels"
+	"Chat_Goland/Repositories/Models/RedisModels"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
 	"net/http"

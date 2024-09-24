@@ -31,7 +31,7 @@ func main() {
 		database := Repositories.GormRepository{}.InitDatabase()
 
 		// 初始化 UserRepository
-		chatroomMessageHistoryRepo := ChatroomMessageHistory.NewGormChatroomMessageHistoryRepository(database)
+		chatroomMessageHistoryRepo := ChatroomMessageHistory.NewChatroomMessageHistoryRepository(database)
 
 		for _, v := range list {
 			var chatroom = RedisModels.RedisChatroomModel{}
@@ -42,9 +42,9 @@ func main() {
 				continue
 			}
 			// 處存到MySQL
-			var histories []ChatroomMessageHistory.ChatroomMessageHistoryRepository
+			var histories []ChatroomMessageHistory.Model
 			for _, m := range message {
-				history := ChatroomMessageHistory.ChatroomMessageHistoryRepository{
+				history := ChatroomMessageHistory.Model{
 					UserId:    33,
 					GroupName: chatroom.Name,
 					Message:   m,

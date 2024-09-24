@@ -1,10 +1,10 @@
-package models
+package User
 
 import (
 	"time"
 )
 
-type User struct {
+type Model struct {
 	//gorm.Model
 	Account     string    `json:"Account" gorm:"primaryKey"`
 	Password    string    `json:"Password" gorm:"type:varchar(30)"`

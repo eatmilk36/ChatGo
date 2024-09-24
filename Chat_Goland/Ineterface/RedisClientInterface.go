@@ -1,7 +1,7 @@
 package Ineterface
 
 import (
-	"Chat_Goland/Repositories/models/RedisModels"
+	"Chat_Goland/Repositories/Models/RedisModels"
 	"golang.org/x/net/context"
 )
 

@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-type GormUserRepository struct {
+type Repository struct {
 	db *gorm.DB
 }
 
-func (repo GormUserRepository) InitDatabase() *gorm.DB {
+func (repo Repository) InitDatabase() *gorm.DB {
 	config, err2 := Config.LoadConfig()
 	if err2 != nil {
 		panic("Config file load failed")

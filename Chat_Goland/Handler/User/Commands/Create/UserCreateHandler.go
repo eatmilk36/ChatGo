@@ -2,7 +2,7 @@ package Create
 
 import (
 	"Chat_Goland/Ineterface"
-	"Chat_Goland/Repositories/models"
+	"Chat_Goland/Repositories/Models/MySQL/User"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -26,14 +26,14 @@ func (h *Handler) CreatUserCommand(c *gin.Context) {
 		return
 	}
 
-	err := h.userRepo.CreateUser(&models.User{
+	err := h.userRepo.CreateUser(&User.Model{
 		Account:     req.Account,
 		Password:    h.crypto.Md5Hash(req.Password),
 		CreatedTime: req.Createdtime,
 	})
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Create User Failed")
+		c.JSON(http.StatusBadRequest, "Create Model Failed")
 		return
 	}
 

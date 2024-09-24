@@ -1,17 +1,17 @@
 package Ineterface
 
 import (
-	"Chat_Goland/Repositories/models"
+	"Chat_Goland/Repositories/Models/MySQL/User"
 )
 
 type UserRepository interface {
-	CreateUser(user *models.User) error
+	CreateUser(user *User.Model) error
 
-	GetUserByID(id uint) (*models.User, error)
+	GetUserByID(id uint) (*User.Model, error)
 
-	UpdateUser(user *models.User) error
+	UpdateUser(user *User.Model) error
 
 	DeleteUser(id uint) error
 
-	GetUserByAccountAndPassword(account string, password string) (*models.User, error)
+	GetUserByAccountAndPassword(account string, password string) (*User.Model, error)
 }

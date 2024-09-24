@@ -1,7 +1,11 @@
 package Controller
 
 import (
+	"Chat_Goland/Common"
 	"Chat_Goland/Middleware"
+	"Chat_Goland/Redis"
+	"Chat_Goland/Repositories"
+	"Chat_Goland/Repositories/Models/MySQL/User"
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -41,19 +45,50 @@ func RouterInit() {
 
 	user := server.Group("/User")
 	{
-		user.POST("/Login", UserController{}.GetUser)
-		user.POST("/Create", UserController{}.CreateUser)
+		userController := InitUserController()
+		user.POST("/Login", userController.GetUser)
+		user.POST("/Create", userController.CreateUser)
 	}
 
 	chatroom := server.Group("/Chatroom")
 	{
-		chatroom.GET("/List", ChatroomController{}.GetChatList)
-		chatroom.POST("/Create", ChatroomController{}.SetChatList)
-		chatroom.GET("/Message", ChatroomController{}.GetGroupMessage)
+		chatroomController := InitChatroomController()
+		chatroom.GET("/List", chatroomController.GetChatList)
+		chatroom.POST("/Create", chatroomController.SetChatList)
+		chatroom.GET("/Message", chatroomController.GetGroupMessage)
 	}
 
 	err := server.Run(":8080")
 	if err != nil {
 		panic("服務器啟動失敗")
 	}
+}
+
+func InitUserController() *UserController {
+	// 初始化 Repository
+	database := Repositories.Repository{}.InitDatabase()
+	repository := User.NewUserRepository(database)
+
+	// 初始化 RedisClient
+	redis := Redis.NewRedisService()
+
+	// 初始化 Crypto
+	helper := &Common.CryptoHelper{}
+
+	// 初始化 Jwt
+	jwt := &Common.Jwt{}
+
+	return NewUserController(
+		*repository,
+		*redis,
+		*helper,
+		*jwt,
+	)
+}
+
+func InitChatroomController() *ChatroomController {
+	// 初始化 RedisClient
+	redis := Redis.NewRedisService()
+
+	return NewChatroomController(*redis)
 }

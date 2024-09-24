@@ -1,7 +1,7 @@
 package Login
 
 import (
-	"Chat_Goland/Repositories/models"
+	"Chat_Goland/Repositories/Models/MySQL/User"
 	"Chat_Goland/Test"
 	"Chat_Goland/Test/Mock"
 	"bytes"
@@ -24,7 +24,7 @@ func setup(t *testing.T) {
 	Test.ResetDB(db)
 
 	// 插入測試資料
-	user := models.User{
+	user := User.Model{
 		Account:     "Jeter",
 		Password:    "MD5",
 		Id:          1,
@@ -34,7 +34,7 @@ func setup(t *testing.T) {
 		t.Fatalf("Failed to insert test user: %v", err)
 	}
 
-	user = models.User{
+	user = User.Model{
 		Account:     "Jeter2",
 		Password:    "MD5",
 		Id:          2,
@@ -68,7 +68,7 @@ func TestUserCreate(t *testing.T) {
 	c.Request = req
 
 	// 模擬使用者資料庫回應
-	mockUser := &models.User{
+	mockUser := &User.Model{
 		Account:     "Jeter",
 		Password:    "33",
 		Id:          1,

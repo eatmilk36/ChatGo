@@ -8,7 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ChatroomController struct{}
+type ChatroomController struct {
+	redisService Redis.RedisService
+}
+
+func NewChatroomController(redis Redis.RedisService) *ChatroomController {
+	return &ChatroomController{
+		redisService: redis,
+	}
+}
 
 // GetChatList godoc
 // @Summary Get Chatroom room list
@@ -21,15 +29,8 @@ type ChatroomController struct{}
 // @Failure 404 {object} map[string]interface{} "Not Found"
 // @Router /Chatroom/List [Get]
 func (ctrl ChatroomController) GetChatList(c *gin.Context) {
-
-	// 初始化 RedisClient
-	redis := Redis.NewRedisService()
-
 	// 注入到 LoginHandler
-	handler := ChatroomList.NewChatListQueryHandler(redis)
-
-	// 呼叫 業務邏輯
-	handler.GetChatroomList(c)
+	ChatroomList.NewChatListQueryHandler(&ctrl.redisService).GetChatroomList(c)
 }
 
 // SetChatList godoc
@@ -44,15 +45,7 @@ func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "Not Found"
 // @Router /Chatroom/Create [Post]
 func (ctrl ChatroomController) SetChatList(c *gin.Context) {
-
-	// 初始化 RedisClient
-	redis := Redis.NewRedisService()
-
-	// 注入到 LoginHandler
-	handler := ChatroomCreate.NewChatroomCreateHandler(redis)
-
-	// 呼叫 業務邏輯
-	handler.SetChatroomList(c)
+	ChatroomCreate.NewChatroomCreateHandler(&ctrl.redisService).SetChatroomList(c)
 }
 
 // GetGroupMessage godoc
@@ -66,13 +59,6 @@ func (ctrl ChatroomController) SetChatList(c *gin.Context) {
 // @Failure 400 {object} map[string]interface{} "Invalid request"
 // @Failure 404 {object} map[string]interface{} "Not Found"
 // @Router /Chatroom/Message [get]
-func (ctrl ChatroomController) GetGroupMessage(context *gin.Context) {
-	// 初始化 RedisClient
-	redis := Redis.NewRedisService()
-
-	// 注入到 LoginHandler
-	handler := ChatroomGroupMessage.NewChatroomGroupMessageQueryHandler(redis)
-
-	// 呼叫 業務邏輯
-	handler.GetChatroomGroupMessage(context)
+func (ctrl ChatroomController) GetGroupMessage(c *gin.Context) {
+	ChatroomGroupMessage.NewChatroomGroupMessageQueryHandler(&ctrl.redisService).GetChatroomGroupMessage(c)
 }
