@@ -12,7 +12,7 @@ func NewGroupManager() *GroupManager {
 	}
 }
 
-// 加入群組
+// JoinGroup 加入群組
 func (gm *GroupManager) JoinGroup(groupName string, client *websocket.Conn) {
 	group, exists := gm.Groups[groupName]
 	if !exists {
@@ -23,7 +23,7 @@ func (gm *GroupManager) JoinGroup(groupName string, client *websocket.Conn) {
 	group.Clients[client] = true
 }
 
-// 向群組發送訊息
+// SendToGroup 向群組發送訊息
 func (gm *GroupManager) SendToGroup(groupName string, message []byte) {
 	group, exists := gm.Groups[groupName]
 	if exists {

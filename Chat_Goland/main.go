@@ -12,8 +12,8 @@
 package main
 
 import (
-	"Chat_Goland/Controller"
 	"Chat_Goland/Redis"
+	"Chat_Goland/Service"
 	"Chat_Goland/WebSocket"
 	_ "Chat_Goland/docs"
 	"golang.org/x/net/context"
@@ -27,7 +27,7 @@ func main() {
 	go redis.ListenForExpiredKeys(context.Background())
 
 	// 啟動Router
-	go Controller.RouterInit()
+	go Service.RouterInit()
 
 	// 註冊 WebSocket 處理器
 	http.HandleFunc("/ws", WebSocket.WsHandler)

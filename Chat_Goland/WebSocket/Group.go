@@ -16,14 +16,17 @@ func NewGroup(name string) *Group {
 	}
 }
 
-// 向群組中的所有客戶端發送訊息
+// Run 向群組中的所有客戶端發送訊息
 func (g *Group) Run() {
 	for {
 		msg := <-g.Broadcast
 		for client := range g.Clients {
 			err := client.WriteMessage(websocket.TextMessage, msg)
 			if err != nil {
-				client.Close()
+				err := client.Close()
+				if err != nil {
+					return
+				}
 				delete(g.Clients, client)
 			}
 		}

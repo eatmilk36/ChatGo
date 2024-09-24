@@ -26,7 +26,12 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("WebSocket 升級失敗:", err)
 		return
 	}
-	defer conn.Close()
+	defer func(conn *websocket.Conn) {
+		err := conn.Close()
+		if err != nil {
+			return
+		}
+	}(conn)
 
 	// 假設這裡從URL或訊息中獲取客戶端想要加入的群組
 	groupName := r.URL.Query().Get("group")

@@ -1,7 +1,8 @@
-package Controller
+package Service
 
 import (
 	"Chat_Goland/Common"
+	"Chat_Goland/Controller"
 	"Chat_Goland/Middleware"
 	"Chat_Goland/Redis"
 	"Chat_Goland/Repositories"
@@ -64,7 +65,7 @@ func RouterInit() {
 	}
 }
 
-func InitUserController() *UserController {
+func InitUserController() *Controller.UserController {
 	// 初始化 Repository
 	database := Repositories.Repository{}.InitDatabase()
 	repository := User.NewUserRepository(database)
@@ -78,7 +79,7 @@ func InitUserController() *UserController {
 	// 初始化 Jwt
 	jwt := &Common.Jwt{}
 
-	return NewUserController(
+	return Controller.NewUserController(
 		*repository,
 		*redis,
 		*helper,
@@ -86,9 +87,9 @@ func InitUserController() *UserController {
 	)
 }
 
-func InitChatroomController() *ChatroomController {
+func InitChatroomController() *Controller.ChatroomController {
 	// 初始化 RedisClient
 	redis := Redis.NewRedisService()
 
-	return NewChatroomController(*redis)
+	return Controller.NewChatroomController(*redis)
 }
