@@ -13,7 +13,8 @@ function Chatroom() {
 
     const connectWebSocket = () => {
         // 創建新的 WebSocket 連接
-        socketRef.current = new WebSocket('ws://127.0.0.1:33925/ws?group=' + id);
+        // socketRef.current = new WebSocket('ws://127.0.0.1:33925/ws?group=' + id);
+        socketRef.current = new WebSocket('ws://[::1]:33925/ws?group=' + id);
 
         socketRef.current.onopen = () => {
             console.log("WebSocket 連接已建立");

@@ -3,7 +3,7 @@ package Create
 import "time"
 
 type UserCreateRequest struct {
-	Account     string    `json:"account"`
-	Password    string    `json:"password"`
-	Createdtime time.Time `json:"createdTime"`
+	Account     string    `json:"Account"`
+	Password    string    `json:"Password"`
+	Createdtime time.Time `json:"CreatedTime"`
 }

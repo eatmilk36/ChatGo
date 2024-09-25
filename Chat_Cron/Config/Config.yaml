@@ -1,6 +1,6 @@
 redis:
-#  Address: "redis:6379"
-  Address: "127.0.0.1:6379"
+  Address: "redis:6379"
+#  Address: "127.0.0.1:6379"
   password: "jeter"
   db: 0
   pool_size: 10
@@ -12,8 +12,8 @@ redis:
 mysql:
   UserName: "root"
   Password: "jeter"
-#  Address: "mysql"
-  Address: "127.0.0.1"
+  Address: "mysql"
+#  Address: "127.0.0.1"
   Port: 3306
   Database: "chat"
   MaxLifetime: 10

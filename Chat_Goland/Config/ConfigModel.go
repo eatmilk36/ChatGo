@@ -43,7 +43,7 @@ type JwtConfig struct {
 
 // LoadConfig 讀取 YAML 配置
 func LoadConfig() (*Config, error) {
-	file, err := os.Open("Chat_Goland/Config/Config.yaml")
+	file, err := os.Open("./Config/Config.yaml")
 	if err != nil {
 		return nil, err
 	}

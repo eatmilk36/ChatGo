@@ -1,4 +1,3 @@
-# frontend/Dockerfile
 # 使用 Node.js 官方的基礎映像來構建 React 應用
 FROM node:16-alpine as build
 
@@ -22,6 +21,12 @@ FROM nginx:alpine
 
 # 複製 React 構建好的靜態文件到 Nginx 的預設公開目錄
 COPY --from=build /app/build /usr/share/nginx/html
+
+# 複製自訂的 Nginx 配置(為解決redresh404問題)
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+# 刪除默認的 default.conf 文件，避免衝突(為解決redresh404問題)
+RUN rm /etc/nginx/conf.d/default.conf
 
 # Expose the Nginx port
 EXPOSE 80

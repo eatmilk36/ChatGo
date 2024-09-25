@@ -5,24 +5,27 @@ services:
       context: ./Chat_Goland
     working_dir: /app
     command: [ "./myapp" ]
-    # volumes:
-    # - .:/app
+    volumes:
+      - "C:/Users/jeter_hsu/Desktop/playstart/project/logs:/var/log/myapp"  # Windows 路徑映射
     depends_on:
       - mysql
       - redis
     ports:
       - "8080:8080"
+      - "33925:33925"  # WebSocket 端口
     networks:
       - app_network
 
   frontend:
+    container_name: frontend
     build:
-      context: ./frontend
+      context: ./chat_frontend
       dockerfile: Dockerfile
+    working_dir: /app
     ports:
-      - "3000:80"  # 將本地的 3000 端口映射到 Nginx 80 端口
+      - "80:80"
     networks:
-      - app-network
+      - app_network
 
   cron:
     container_name: chat_cron
@@ -92,3 +95,4 @@ services:
 networks:
   app_network:
     driver: bridge
+    enable_ipv6: false

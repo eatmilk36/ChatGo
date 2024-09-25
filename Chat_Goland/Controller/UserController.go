@@ -14,14 +14,16 @@ type UserController struct {
 	redisService  Redis.RedisService
 	cryptoService Services.CryptoService
 	jwtService    Services.JwtService
+	logService    Services.LogService
 }
 
-func NewUserController(userRepo User.Repository, redis Redis.RedisService, helper Services.CryptoService, jwt Services.JwtService) *UserController {
+func NewUserController(userRepo User.Repository, redis Redis.RedisService, helper Services.CryptoService, jwt Services.JwtService, log Services.LogService) *UserController {
 	return &UserController{
 		userRepo:      userRepo,
 		redisService:  redis,
 		cryptoService: helper,
 		jwtService:    jwt,
+		logService:    log,
 	}
 }
 
@@ -37,7 +39,7 @@ func NewUserController(userRepo User.Repository, redis Redis.RedisService, helpe
 // @Failure 404 {object} map[string]interface{} "Model not found"
 // @Router /user/Login [post]
 func (ctrl UserController) GetUser(c *gin.Context) {
-	Login.NewLoginHandler(&ctrl.userRepo, &ctrl.redisService, &ctrl.cryptoService, ctrl.jwtService).LoginQueryHandler(c)
+	Login.NewLoginHandler(&ctrl.userRepo, &ctrl.redisService, &ctrl.cryptoService, &ctrl.jwtService, &ctrl.logService).LoginQueryHandler(c)
 }
 
 // CreateUser godoc

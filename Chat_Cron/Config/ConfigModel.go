@@ -46,7 +46,7 @@ type JwtConfig struct {
 func LoadConfig() (*Config, error) {
 	exePath, _ := os.Executable()
 	fmt.Println(exePath)
-	file, err := os.Open("Chat_Cron/Config/Config.yaml")
+	file, err := os.Open("./Config/Config.yaml")
 	if err != nil {
 		return nil, err
 	}

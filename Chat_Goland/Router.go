@@ -7,7 +7,6 @@ import (
 	"Chat_Goland/Repositories"
 	"Chat_Goland/Repositories/Models/MySQL/User"
 	"Chat_Goland/Services"
-	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -19,17 +18,17 @@ func RouterInit() {
 	server := gin.Default()
 
 	server.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://127.0.0.1:3000", "http://172.30.240.1:3000", "http://localhost:3000", "http://localhost:3000"},
+		AllowOrigins:     []string{"http://127.0.0.1:80", "http://172.30.240.1:80", "http://localhost", "http://localhost:80", "http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
 
-	server.Use(func(c *gin.Context) {
-		c.Next()
-		// 檢查 CORS 頭部是否正確被設置
-		fmt.Println("CORS Origin:", c.Writer.Header().Get("Access-Control-Allow-Origin"))
-	})
+	//server.Use(func(c *gin.Context) {
+	//	c.Next()
+	//	// 檢查 CORS 頭部是否正確被設置
+	//	fmt.Println("CORS Origin:", c.Writer.Header().Get("Access-Control-Allow-Origin"))
+	//})
 
 	// 啟動中間層檢查JWT
 	server.Use(Middleware.JWTAuthMiddleware())
@@ -79,11 +78,15 @@ func InitUserController() *Controller.UserController {
 	// 初始化 JwtService
 	jwt := &Services.JwtService{}
 
+	// 初始化 LogService
+	log := Services.NewLogService()
+
 	return Controller.NewUserController(
 		*repository,
 		*redis,
 		*helper,
 		*jwt,
+		*log,
 	)
 }
 
