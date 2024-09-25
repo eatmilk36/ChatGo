@@ -11,3 +11,8 @@ type Model struct {
 	Id          int       `json:"Id" gorm:"type:varchar(30)"`
 	CreatedTime time.Time `json:"Createdtime" gorm:"column:Createdtime"`
 }
+
+// TableName 指定資料表名稱為 'ChatroomMessageHistory'
+func (Model) TableName() string {
+	return "Users"
+}

@@ -19,15 +19,15 @@ func NewGroup(name string) *Group {
 // Run 向群組中的所有客戶端發送訊息
 func (g *Group) Run() {
 	for {
-		msg := <-g.Broadcast
-		for client := range g.Clients {
-			err := client.WriteMessage(websocket.TextMessage, msg)
-			if err != nil {
-				err := client.Close()
+		select {
+		case message := <-g.Broadcast:
+			// 將訊息發送給群組內的每個客戶端
+			for client := range g.Clients {
+				err := client.WriteMessage(websocket.TextMessage, message)
 				if err != nil {
-					return
+					_ = client.Close()
+					delete(g.Clients, client) // 移除連線失敗的客戶端
 				}
-				delete(g.Clients, client)
 			}
 		}
 	}

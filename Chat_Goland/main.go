@@ -32,8 +32,8 @@ func main() {
 	http.HandleFunc("/ws", WebSocket.WsHandler)
 
 	// 啟動 HTTP 伺服器
-	log.Println("伺服器啟動中，監聽端口 :52333")
-	err := http.ListenAndServe("127.0.0.1:52333", nil)
+	log.Println("伺服器啟動中，監聽端口 :33925")
+	err := http.ListenAndServe("127.0.0.1:33925", nil)
 	if err != nil {
 		log.Fatal("伺服器啟動失敗:", err)
 	}

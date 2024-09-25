@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {getToken} from "../Common/LocalStorage.js";
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { getToken } from "../Common/LocalStorage.js";
 import axios from "../AxiosInterceptors.js";
 
 function Chatroom() {
@@ -8,36 +8,56 @@ function Chatroom() {
     const [messages, setMessages] = useState([]);
     const socketRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
-    const {id} = useParams();
-    let once = 0;
+    const { id } = useParams();
+    const [isConnected, setIsConnected] = useState(false);
+
+    const connectWebSocket = () => {
+        // 創建新的 WebSocket 連接
+        socketRef.current = new WebSocket('ws://127.0.0.1:33925/ws?group=' + id);
+
+        socketRef.current.onopen = () => {
+            console.log("WebSocket 連接已建立");
+            setIsConnected(true);
+        };
+
+        socketRef.current.onmessage = (event) => {
+            const newMessage = event.data;
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+        };
+
+        socketRef.current.onclose = (event) => {
+            console.log("WebSocket 連接已關閉，狀態碼:", event.code, "原因:", event.reason);
+            setIsConnected(false);  // 連接已關閉
+            // 自動重連
+            setTimeout(() => {
+                console.log("嘗試重新連接 WebSocket...");
+                connectWebSocket();  // 重連
+            }, 3000);  // 3 秒後重連
+        };
+
+        socketRef.current.onerror = (error) => {
+            console.error("WebSocket 發生錯誤:", error);
+        };
+    };
 
     useEffect(() => {
-        let token = getToken();
+        const token = getToken();
         if (!token) {
             navigate('/login');
-            return; // 直接返回，避免不必要的 API 呼叫
+            return;
         }
 
-        // 創建 WebSocket 連接
-        if (!socketRef.current) { // 檢查是否已有連接，避免重複連接
-            socketRef.current = new WebSocket('ws://127.0.0.1:52333/ws?group=' + id);
+        // 初始化 WebSocket 連接
+        connectWebSocket();
 
-            socketRef.current.onmessage = (event) => {
-                const newMessage = event.data;
-                setMessages((prevMessages) => [...prevMessages, newMessage]);
-            };
-        }
-
-        if (once === 0) {
-            once++;
-            axios.get('/Chatroom/Message?groupName=' + id)
-                .then((response) => {
-                    setMessages((prevMessages) => [...prevMessages, ...response.data]);
-                })
-                .catch((error) => {
-                    console.error("獲取資料時發生錯誤:", error);
-                });
-        }
+        // 獲取初始訊息
+        axios.get('/Chatroom/Message?groupName=' + id)
+            .then((response) => {
+                setMessages((prevMessages) => [...prevMessages, ...response.data]);
+            })
+            .catch((error) => {
+                console.error("獲取資料時發生錯誤:", error);
+            });
 
         // 清理 WebSocket 連接
         return () => {
@@ -50,10 +70,13 @@ function Chatroom() {
     // 發送訊息到 WebSocket 伺服器
     const sendMessage = () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            socketRef.current.send(inputValue); // 發送輸入框的值
-            setInputValue(''); // 清空輸入框
+            socketRef.current.send(inputValue);  // 發送訊息
+            setInputValue('');  // 清空輸入框
+        } else {
+            console.log("WebSocket 未連接，無法發送訊息");
         }
     };
+
     return (
         <div>
             <h2>Chatroom</h2>
@@ -69,7 +92,7 @@ function Chatroom() {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Enter your message"
             />
-            <button onClick={sendMessage}>Send Message</button>
+            <button onClick={sendMessage} disabled={!isConnected}>Send Message</button>
         </div>
     );
 }
