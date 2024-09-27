@@ -1,10 +1,10 @@
-package Ineterface
+package Interface
 
 import (
 	"Chat_Goland/Repositories/Models/MySQL/User"
 )
 
-type UserRepository interface {
+type UserRepositoryInterface interface {
 	CreateUser(user *User.Model) error
 
 	GetUserByID(id uint) (*User.Model, error)

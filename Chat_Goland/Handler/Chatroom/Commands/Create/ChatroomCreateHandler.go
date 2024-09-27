@@ -1,7 +1,7 @@
 package Chatroom
 
 import (
-	"Chat_Goland/Ineterface"
+	"Chat_Goland/Interface"
 	"Chat_Goland/Repositories/Models/RedisModels"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
@@ -9,10 +9,10 @@ import (
 )
 
 type ChatroomCreateHandler struct {
-	redis Ineterface.RedisServiceInterface
+	redis Interface.RedisServiceInterface
 }
 
-func NewChatroomCreateHandler(redis Ineterface.RedisServiceInterface) *ChatroomCreateHandler {
+func NewChatroomCreateHandler(redis Interface.RedisServiceInterface) *ChatroomCreateHandler {
 	return &ChatroomCreateHandler{redis: redis}
 }
 

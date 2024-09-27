@@ -1,7 +1,7 @@
 package Chatroom
 
 import (
-	"Chat_Goland/Ineterface"
+	"Chat_Goland/Interface"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
@@ -9,11 +9,11 @@ import (
 )
 
 type ChatListQueryHandler struct {
-	redis Ineterface.RedisServiceInterface
-	log   Ineterface.LogServiceInterface
+	redis Interface.RedisServiceInterface
+	log   Interface.LogServiceInterface
 }
 
-func NewChatListQueryHandler(redis Ineterface.RedisServiceInterface, log Ineterface.LogServiceInterface) *ChatListQueryHandler {
+func NewChatListQueryHandler(redis Interface.RedisServiceInterface, log Interface.LogServiceInterface) *ChatListQueryHandler {
 	return &ChatListQueryHandler{redis: redis, log: log}
 }
 

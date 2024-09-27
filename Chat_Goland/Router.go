@@ -82,10 +82,10 @@ func InitUserController() *Controller.UserController {
 	log := Services.NewLogLokiService()
 
 	return Controller.NewUserController(
-		*repository,
-		*redis,
-		*helper,
-		*jwt,
+		repository,
+		redis,
+		helper,
+		jwt,
 		log,
 	)
 }
@@ -97,5 +97,5 @@ func InitChatroomController() *Controller.ChatroomController {
 	// 初始化 LogService
 	log := Services.NewLogLokiService()
 
-	return Controller.NewChatroomController(*redis, *log)
+	return Controller.NewChatroomController(redis, log)
 }

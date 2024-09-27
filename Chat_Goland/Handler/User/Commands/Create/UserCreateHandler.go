@@ -1,19 +1,19 @@
 package Create
 
 import (
-	"Chat_Goland/Ineterface"
+	"Chat_Goland/Interface"
 	"Chat_Goland/Repositories/Models/MySQL/User"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type Handler struct {
-	userRepo Ineterface.UserRepository
-	crypto   Ineterface.CryptoService
+	userRepo Interface.UserRepositoryInterface
+	crypto   Interface.CryptoServiceInterService
 }
 
-// NewLoginHandler 建立 CreateHandler 並注入 UserRepository
-func NewLoginHandler(userRepo Ineterface.UserRepository, crypto Ineterface.CryptoService) *Handler {
+// NewLoginHandler 建立 CreateHandler 並注入 UserRepositoryInterface
+func NewLoginHandler(userRepo Interface.UserRepositoryInterface, crypto Interface.CryptoServiceInterService) *Handler {
 	return &Handler{userRepo: userRepo, crypto: crypto}
 }
 

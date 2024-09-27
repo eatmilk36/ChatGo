@@ -4,17 +4,16 @@ import (
 	ChatroomCreate "Chat_Goland/Handler/Chatroom/Commands/Create"
 	ChatroomList "Chat_Goland/Handler/Chatroom/Queries/List"
 	ChatroomGroupMessage "Chat_Goland/Handler/ChatroomGroupMessage/Queryies/List"
-	"Chat_Goland/Redis"
-	"Chat_Goland/Services"
+	"Chat_Goland/Interface"
 	"github.com/gin-gonic/gin"
 )
 
 type ChatroomController struct {
-	redisService Redis.RedisService
-	log          Services.LogLokiService
+	redisService Interface.RedisServiceInterface
+	log          Interface.LogServiceInterface
 }
 
-func NewChatroomController(redis Redis.RedisService, log Services.LogLokiService) *ChatroomController {
+func NewChatroomController(redis Interface.RedisServiceInterface, log Interface.LogServiceInterface) *ChatroomController {
 	return &ChatroomController{
 		redisService: redis,
 		log:          log,
@@ -33,7 +32,7 @@ func NewChatroomController(redis Redis.RedisService, log Services.LogLokiService
 // @Router /Chatroom/List [Get]
 func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 	// 注入到 LoginHandler
-	ChatroomList.NewChatListQueryHandler(&ctrl.redisService, &ctrl.log).GetChatroomList(c)
+	ChatroomList.NewChatListQueryHandler(ctrl.redisService, ctrl.log).GetChatroomList(c)
 }
 
 // SetChatList godoc
@@ -48,7 +47,7 @@ func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "Not Found"
 // @Router /Chatroom/Create [Post]
 func (ctrl ChatroomController) SetChatList(c *gin.Context) {
-	ChatroomCreate.NewChatroomCreateHandler(&ctrl.redisService).SetChatroomList(c)
+	ChatroomCreate.NewChatroomCreateHandler(ctrl.redisService).SetChatroomList(c)
 }
 
 // GetGroupMessage godoc
@@ -63,5 +62,5 @@ func (ctrl ChatroomController) SetChatList(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "Not Found"
 // @Router /Chatroom/Message [get]
 func (ctrl ChatroomController) GetGroupMessage(c *gin.Context) {
-	ChatroomGroupMessage.NewChatroomGroupMessageQueryHandler(&ctrl.redisService).GetChatroomGroupMessage(c)
+	ChatroomGroupMessage.NewChatroomGroupMessageQueryHandler(ctrl.redisService).GetChatroomGroupMessage(c)
 }

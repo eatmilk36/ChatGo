@@ -1,7 +1,7 @@
 package Login
 
 import (
-	"Chat_Goland/Ineterface"
+	"Chat_Goland/Interface"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
@@ -9,14 +9,14 @@ import (
 )
 
 type Handler struct {
-	userRepo Ineterface.UserRepository
-	redis    Ineterface.RedisServiceInterface
-	crypto   Ineterface.CryptoService
-	jwt      Ineterface.JwtServiceInterface
-	log      Ineterface.LogServiceInterface
+	userRepo Interface.UserRepositoryInterface
+	redis    Interface.RedisServiceInterface
+	crypto   Interface.CryptoServiceInterService
+	jwt      Interface.JwtServiceInterface
+	log      Interface.LogServiceInterface
 }
 
-func NewLoginHandler(userRepo Ineterface.UserRepository, redis Ineterface.RedisServiceInterface, crypto Ineterface.CryptoService, jwt Ineterface.JwtServiceInterface, log Ineterface.LogServiceInterface) *Handler {
+func NewLoginHandler(userRepo Interface.UserRepositoryInterface, redis Interface.RedisServiceInterface, crypto Interface.CryptoServiceInterService, jwt Interface.JwtServiceInterface, log Interface.LogServiceInterface) *Handler {
 	return &Handler{userRepo: userRepo, redis: redis, crypto: crypto, jwt: jwt, log: log}
 }
 

@@ -1,4 +1,4 @@
-package Ineterface
+package Interface
 
 import (
 	"Chat_Goland/Repositories/Models/RedisModels"

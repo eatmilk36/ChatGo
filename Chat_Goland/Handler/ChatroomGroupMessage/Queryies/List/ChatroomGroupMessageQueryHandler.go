@@ -1,17 +1,17 @@
 package ChatroomGroupMessage
 
 import (
-	"Chat_Goland/Ineterface"
+	"Chat_Goland/Interface"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
 	"net/http"
 )
 
 type ChatroomGroupMessageQueryHandler struct {
-	redis Ineterface.RedisServiceInterface
+	redis Interface.RedisServiceInterface
 }
 
-func NewChatroomGroupMessageQueryHandler(redis Ineterface.RedisServiceInterface) *ChatroomGroupMessageQueryHandler {
+func NewChatroomGroupMessageQueryHandler(redis Interface.RedisServiceInterface) *ChatroomGroupMessageQueryHandler {
 	return &ChatroomGroupMessageQueryHandler{redis: redis}
 }
 

@@ -1,4 +1,4 @@
-package Ineterface
+package Interface
 
 type LogServiceInterface interface {
 	LogError(value string)
