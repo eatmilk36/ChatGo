@@ -61,6 +61,9 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
+
+			marshal, _ := json.Marshal(histories)
+			fmt.Println("Success,data:", marshal)
 		}
 	})
 

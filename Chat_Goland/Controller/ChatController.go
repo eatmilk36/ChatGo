@@ -5,16 +5,19 @@ import (
 	ChatroomList "Chat_Goland/Handler/Chatroom/Queries/List"
 	ChatroomGroupMessage "Chat_Goland/Handler/ChatroomGroupMessage/Queryies/List"
 	"Chat_Goland/Redis"
+	"Chat_Goland/Services"
 	"github.com/gin-gonic/gin"
 )
 
 type ChatroomController struct {
 	redisService Redis.RedisService
+	log          Services.LogLokiService
 }
 
-func NewChatroomController(redis Redis.RedisService) *ChatroomController {
+func NewChatroomController(redis Redis.RedisService, log Services.LogLokiService) *ChatroomController {
 	return &ChatroomController{
 		redisService: redis,
+		log:          log,
 	}
 }
 
@@ -30,7 +33,7 @@ func NewChatroomController(redis Redis.RedisService) *ChatroomController {
 // @Router /Chatroom/List [Get]
 func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 	// 注入到 LoginHandler
-	ChatroomList.NewChatListQueryHandler(&ctrl.redisService).GetChatroomList(c)
+	ChatroomList.NewChatListQueryHandler(&ctrl.redisService, &ctrl.log).GetChatroomList(c)
 }
 
 // SetChatList godoc

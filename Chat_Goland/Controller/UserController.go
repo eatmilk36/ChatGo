@@ -3,6 +3,7 @@ package Controller
 import (
 	"Chat_Goland/Handler/User/Commands/Create"
 	"Chat_Goland/Handler/User/Commands/Login"
+	"Chat_Goland/Ineterface"
 	"Chat_Goland/Redis"
 	"Chat_Goland/Repositories/Models/MySQL/User"
 	"Chat_Goland/Services"
@@ -14,10 +15,10 @@ type UserController struct {
 	redisService  Redis.RedisService
 	cryptoService Services.CryptoService
 	jwtService    Services.JwtService
-	logService    Services.LogService
+	logService    Ineterface.LogServiceInterface
 }
 
-func NewUserController(userRepo User.Repository, redis Redis.RedisService, helper Services.CryptoService, jwt Services.JwtService, log Services.LogService) *UserController {
+func NewUserController(userRepo User.Repository, redis Redis.RedisService, helper Services.CryptoService, jwt Services.JwtService, log Ineterface.LogServiceInterface) *UserController {
 	return &UserController{
 		userRepo:      userRepo,
 		redisService:  redis,
@@ -39,7 +40,7 @@ func NewUserController(userRepo User.Repository, redis Redis.RedisService, helpe
 // @Failure 404 {object} map[string]interface{} "Model not found"
 // @Router /user/Login [post]
 func (ctrl UserController) GetUser(c *gin.Context) {
-	Login.NewLoginHandler(&ctrl.userRepo, &ctrl.redisService, &ctrl.cryptoService, &ctrl.jwtService, &ctrl.logService).LoginQueryHandler(c)
+	Login.NewLoginHandler(&ctrl.userRepo, &ctrl.redisService, &ctrl.cryptoService, &ctrl.jwtService, ctrl.logService).LoginQueryHandler(c)
 }
 
 // CreateUser godoc

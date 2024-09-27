@@ -35,12 +35,14 @@ services:
     working_dir: /app
     command: [ "./myapp" ]
     volumes:
-      - C:/logs:/var/log/myapp  # Windows 路徑映射
+      - "C:/Users/jeter_hsu/Desktop/playstart/project/logs:/var/log/myapp"  # Windows 路徑映射
     depends_on:
       mysql:
         condition: service_started
       redis:
         condition: service_started
+      logstash:
+        condition: service_healthy  # 確保 logstash 啟動並健康後才啟動 app
     ports:
       - "8080:8080"
       - "33925:33925"  # WebSocket 端口
@@ -69,55 +71,55 @@ services:
         condition: service_started
       redis:
         condition: service_started
+      logstash:
+        condition: service_healthy  # 確保 logstash 啟動並健康後才啟動 cron
     networks:
       - app_network
 
-  loki:
-    image: grafana/loki:2.9.1
-    container_name: loki
-    ports:
-      - "3100:3100"
-    user: "root"
-    volumes:
-      - C:/logs:/var/log/myapp
-      - ./loki-config:/etc/loki/
-      - C:/loki-data:/var/loki  # 將容器內的 /tmp/loki 目錄映射到宿主機
-    command: -config.file=/etc/loki/loki.yaml
-    networks:
-      - app_network
-
-  promtail:
-    image: grafana/promtail:2.9.1
-    container_name: promtail
-    ports:
-      - "9080:9080"
-    volumes:
-      - ./promtail-config:/etc/promtail/
-      - C:/logs:/var/log
-    command: -config.file=/etc/promtail/promtail.yaml
-    networks:
-      - app_network
-  # 查看需要把在頁面上把loki設定成http:loki:3100 跟 搜尋條件要改成{job="varlogs"}
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana_compose
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana-data:/var/lib/grafana
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: elasticsearch
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - discovery.type=single-node
+      - xpack.security.enabled=false  # 禁用安全
+    #    volumes:
+    #      - C:/Users/jeter_hsu/certs:/usr/share/elasticsearch/my-certs
+    ports:
+      - "9200:9200"
     networks:
       - app_network
 
-  alpine:
-    image: alpine:latest
-    container_name: alpine_test
-    command: sh -c "while true; do sleep 1000; done"
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.0
+    container_name: logstash
+    volumes:
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - "5044:5044"
     networks:
       - app_network
-    stdin_open: true  # 允許你通過 'docker exec' 進行交互式操作
-    tty: true         # 配置容器為TTY模式
+    depends_on:
+      - elasticsearch
+    healthcheck:  # 為 logstash 添加 healthcheck
+      test: ["CMD-SHELL", "curl -s http://localhost:9600/_node/pipelines | grep -q logstash"]
+      interval: 10s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200  # 使用 HTTP 而非 HTTPS
+      - xpack.security.enabled=false  # 禁用安全
+      - ELASTICSEARCH_USERNAME=jeter
+      - ELASTICSEARCH_PASSWORD=sara
+    ports:
+      - "5601:5601"
+    networks:
+      - app_network
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
 
 networks:
   app_network:
@@ -127,4 +129,3 @@ networks:
 volumes:
   certs_volume:
     driver: local
-  grafana-data:
