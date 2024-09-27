@@ -4,13 +4,14 @@ import (
 	"Chat_Goland/Services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 忽略 JWT 驗證
 		if c.Request.URL.Path == "/User/Login" ||
-			c.Request.URL.Path == "/swagger/*any" ||
+			strings.HasPrefix(c.Request.URL.Path, "/swagger/") ||
 			c.Request.URL.Path == "/User/Create" {
 			c.Next()
 			return

@@ -83,7 +83,7 @@ services:
     volumes:
       - C:/logs:/var/log/myapp
       - ./loki-config:/etc/loki/
-      - C:/loki-data:/var/loki  # 將容器內的 /tmp/loki 目錄映射到宿主機
+      - C:/loki-data:/var/loki  # 將容器內的 /var/loki 目錄映射到宿主機
     command: -config.file=/etc/loki/loki.yaml
     networks:
       - app_network
@@ -99,6 +99,7 @@ services:
     command: -config.file=/etc/promtail/promtail.yaml
     networks:
       - app_network
+
   # 查看需要把在頁面上把loki設定成http:loki:3100 跟 搜尋條件要改成{job="varlogs"}
   grafana:
     image: grafana/grafana:latest
@@ -127,6 +128,4 @@ networks:
     enable_ipv6: false
 
 volumes:
-  certs_volume:
-    driver: local
   grafana-data:
