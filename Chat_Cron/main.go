@@ -20,6 +20,7 @@ func main() {
 	_, _ = c.AddFunc("@every 10s", func() {
 		// 之後要備份Redis 到 MySQL
 		fmt.Println("每分鐘執行一次的任務：", time.Now())
+		fmt.Println("start")
 
 		redis := Redis.NewRedisService()
 		ctx := context.Background()
@@ -65,6 +66,7 @@ func main() {
 			marshal, _ := json.Marshal(histories)
 			fmt.Println("Success,data:", marshal)
 		}
+		fmt.Println("success")
 	})
 
 	// 啟動 Cron 排程

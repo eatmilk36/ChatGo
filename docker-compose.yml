@@ -44,6 +44,8 @@ services:
     ports:
       - "8080:8080"
       - "33925:33925"  # WebSocket 端口
+    environment:
+      - ENVIRONMENT=production
     networks:
       - app_network
 

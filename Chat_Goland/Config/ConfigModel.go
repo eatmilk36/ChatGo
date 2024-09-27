@@ -43,7 +43,18 @@ type JwtConfig struct {
 
 // LoadConfig 讀取 YAML 配置
 func LoadConfig() (*Config, error) {
-	file, err := os.Open("./Config/Config.yaml")
+	env := os.Getenv("ENVIRONMENT")
+
+	configFile := ""
+	switch env {
+	case "development":
+		configFile = "Chat_Goland/Config/Config.dev.yaml"
+	case "production":
+		configFile = "./Config/Config.prod.yaml"
+	default:
+		panic("not found config.yaml")
+	}
+	file, err := os.Open(configFile)
 	if err != nil {
 		return nil, err
 	}
