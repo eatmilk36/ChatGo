@@ -91,8 +91,13 @@ func TestUserCreate(t *testing.T) {
 	jwt := new(Mock.Jwt)
 	jwt.On("GenerateJWT", mockUser.Account).Return("33kk", nil)
 
+	// 模擬 Jwt 回應
+	log := new(Mock.Log)
+	log.On("LogError", mock.Anything).Return()
+	log.On("LogDebug", mock.Anything).Return()
+
 	// 創建一個具體的 LoginHandler 實例，並初始化必要的依賴
-	handler := NewLoginHandler(userRepo, redis, crypto, jwt)
+	handler := NewLoginHandler(userRepo, redis, crypto, jwt, log)
 	handler.LoginQueryHandler(c)
 
 	// 驗證 HTTP 狀態碼
