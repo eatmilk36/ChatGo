@@ -1,4 +1,4 @@
-package WebSocket
+package GroupManager
 
 import "github.com/gorilla/websocket"
 

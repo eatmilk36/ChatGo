@@ -1,14 +1,13 @@
 package WebSocket
 
 import (
-	"Chat_Goland/Redis"
+	"Chat_Goland/Single/SingleGroupManager"
+	"Chat_Goland/Single/SingleRedisServer"
 	"github.com/gorilla/websocket"
 	"golang.org/x/net/context"
 	"log"
 	"net/http"
 )
-
-var groupManager = NewGroupManager()
 
 var upgrade = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -19,7 +18,7 @@ var upgrade = websocket.Upgrader{
 	},
 }
 
-// WebSocket 連接處理
+// WsHandler WebSocket 連接處理
 func WsHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("進入 WebSocket handler")
 	conn, err := upgrade.Upgrade(w, r, nil)
@@ -40,7 +39,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("客戶端加入群組: %s", groupName)
 
-	groupManager.JoinGroup(groupName, conn)
+	SingleGroupManager.SingleGroupManager.JoinGroup(groupName, conn)
 	log.Printf("群組 %s 已加入", groupName)
 
 	for {
@@ -67,7 +66,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 		}()
 
 		// 轉發訊息給群組中的所有人
-		go groupManager.SendToGroup(groupName, message)
+		go SingleGroupManager.SingleGroupManager.SendToGroup(groupName, message)
 		log.Printf("訊息已轉發至群組 %s", groupName)
 	}
 }
@@ -78,7 +77,7 @@ func saveMessage(groupName string, message []byte) error {
 	ctx := context.Background()
 
 	// 使用 NewRedisService 來初始化 RedisService
-	service := Redis.NewRedisService()
+	service := SingleRedisServer.SingleRedisServer
 	err := service.SaveChatMessage(ctx, groupName, string(message))
 	if err != nil {
 		log.Printf("儲存訊息至 Redis 失敗: %v", err)

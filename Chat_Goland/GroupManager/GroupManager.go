@@ -1,6 +1,8 @@
-package WebSocket
+package GroupManager
 
-import "github.com/gorilla/websocket"
+import (
+	"github.com/gorilla/websocket"
+)
 
 type GroupManager struct {
 	Groups map[string]*Group
@@ -27,6 +29,13 @@ func (gm *GroupManager) JoinGroup(groupName string, client *websocket.Conn) {
 func (gm *GroupManager) SendToGroup(groupName string, message []byte) {
 	group, exists := gm.Groups[groupName]
 	if exists {
+		group.Broadcast <- message
+	}
+}
+
+// BroadcastToAll 廣播訊息給所有群組
+func (gm *GroupManager) BroadcastToAll(message []byte) {
+	for _, group := range gm.Groups {
 		group.Broadcast <- message
 	}
 }

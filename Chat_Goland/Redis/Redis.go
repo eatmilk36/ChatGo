@@ -3,6 +3,7 @@ package Redis
 import (
 	"Chat_Goland/Config"
 	"Chat_Goland/Repositories/Models/RedisModels"
+	"Chat_Goland/Single/SingleGroupManager"
 	"context"
 	"encoding/json"
 	"errors"
@@ -172,7 +173,7 @@ func (r *RedisService) SaveUserLogin(ctx context.Context, username string, jwt s
 
 // ListenForExpiredKeys 獨立的函數來監聽 Redis 的鍵過期事件
 func (r *RedisService) ListenForExpiredKeys(ctx context.Context) {
-	PubNub := r.client.PSubscribe(ctx, "__keyevent@0__:expired")
+	PubNub := r.client.PSubscribe(ctx, "__keyevent@0__:expired", "__keyevent@0__:del")
 	defer func(PubNub *redis.PubSub) {
 		_ = PubNub.Close()
 	}(PubNub)
@@ -180,5 +181,9 @@ func (r *RedisService) ListenForExpiredKeys(ctx context.Context) {
 	for msg := range PubNub.Channel() {
 		fmt.Println("Key expired:", msg.Payload)
 		// 在這裡執行過期鍵的通知邏輯，例如透過 MQTT 或 WebSocket 發送通知
+		bytes := []byte("/AdminKickUser:" + msg.Payload)
+		// 確保 WebSocket.GroupManager 已經正確初始化
+
+		SingleGroupManager.SingleGroupManager.BroadcastToAll(bytes)
 	}
 }

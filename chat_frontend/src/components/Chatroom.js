@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
-import { getToken } from "../Common/LocalStorage.js";
+import React, {useEffect, useRef, useState} from 'react';
+import {useNavigate, useParams} from "react-router-dom";
+import {getToken} from "../Common/LocalStorage.js";
 import axios from "../AxiosInterceptors.js";
+import {jwtDecode} from "jwt-decode";
 
 function Chatroom() {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const socketRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
-    const { id } = useParams();
+    const {id} = useParams();
     const [isConnected, setIsConnected] = useState(false);
 
     const connectWebSocket = () => {
@@ -23,18 +24,39 @@ function Chatroom() {
 
         socketRef.current.onmessage = (event) => {
             const newMessage = event.data;
+            if (event.data.startsWith("/AdminKickUser:")) {
+                console.log(newMessage);
+
+                let token = getToken();
+
+                if (token) {
+                    try {
+                        const decodedToken = jwtDecode(token);
+                        if (decodedToken.username === event.data.split(':')[2]) {
+                            console.log("踢出去")
+                            socketRef.current.close();
+                            navigate('/login');
+                        }
+
+                    } catch (error) {
+                        console.error('無效的 JWT:', error);
+                    }
+                }
+
+                return;
+            }
             setMessages((prevMessages) => [...prevMessages, newMessage]);
         };
 
-        socketRef.current.onclose = (event) => {
-            console.log("WebSocket 連接已關閉，狀態碼:", event.code, "原因:", event.reason);
-            setIsConnected(false);  // 連接已關閉
-            // 自動重連
-            setTimeout(() => {
-                console.log("嘗試重新連接 WebSocket...");
-                connectWebSocket();  // 重連
-            }, 3000);  // 3 秒後重連
-        };
+        // socketRef.current.onclose = (event) => {
+        //     console.log("WebSocket 連接已關閉，狀態碼:", event.code, "原因:", event.reason);
+        //     setIsConnected(false);  // 連接已關閉
+        //     // 自動重連
+        //     setTimeout(() => {
+        //         console.log("嘗試重新連接 WebSocket...");
+        //         connectWebSocket();  // 重連
+        //     }, 3000);  // 3 秒後重連
+        // };
 
         socketRef.current.onerror = (error) => {
             console.error("WebSocket 發生錯誤:", error);
