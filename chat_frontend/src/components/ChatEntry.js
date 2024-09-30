@@ -61,7 +61,7 @@ function List({id, name}) {
     const navigate = useNavigate();
 
     const EntryChatroom = () => {
-        navigate(`/chat/chatroom/${id}`);
+        navigate(`/chat/chatroom/${name}`);
     };
     return (
         <div className="chatroom-list" data-key={id} onClick={EntryChatroom}>
