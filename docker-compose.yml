@@ -71,6 +71,8 @@ services:
         condition: service_started
       redis:
         condition: service_started
+    environment:
+      - ENVIRONMENT=production
     networks:
       - app_network
 

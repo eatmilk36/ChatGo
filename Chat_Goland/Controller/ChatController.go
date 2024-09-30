@@ -35,7 +35,7 @@ func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 	ChatroomList.NewChatListQueryHandler(ctrl.redisService, ctrl.log).GetChatroomList(c)
 }
 
-// SetChatList godoc
+// CreateChatroom godoc
 // @Summary Set Chatroom room list
 // @Description Set Chatroom room
 // @Tags Chatroom
@@ -46,7 +46,7 @@ func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 // @Failure 400 {object} map[string]interface{} "Invalid request"
 // @Failure 404 {object} map[string]interface{} "Not Found"
 // @Router /Chatroom/Create [Post]
-func (ctrl ChatroomController) SetChatList(c *gin.Context) {
+func (ctrl ChatroomController) CreateChatroom(c *gin.Context) {
 	ChatroomCreate.NewChatroomCreateHandler(ctrl.redisService).SetChatroomList(c)
 }
 

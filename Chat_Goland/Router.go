@@ -54,7 +54,7 @@ func RouterInit() {
 	{
 		chatroomController := InitChatroomController()
 		chatroom.GET("/List", chatroomController.GetChatList)
-		chatroom.POST("/Create", chatroomController.SetChatList)
+		chatroom.POST("/Create", chatroomController.CreateChatroom)
 		chatroom.GET("/Message", chatroomController.GetGroupMessage)
 	}
 
