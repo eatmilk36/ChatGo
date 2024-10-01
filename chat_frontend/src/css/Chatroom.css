@@ -1,0 +1,19 @@
+.chatroom-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.message-list {
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-group {
+    margin-top: 10px;
+}

@@ -3,6 +3,7 @@ import '../css/ChatEntry.css'; // 加上 CSS 來做簡單的樣式
 import axios from "../AxiosInterceptors.js";
 import {useNavigate} from 'react-router-dom';
 import CryptoJS from 'crypto-js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function ChatEntry() {
     const [lists, setLists] = useState([]);
@@ -12,7 +13,6 @@ function ChatEntry() {
 
     // 使用 useEffect 發送 API 請求來獲取資料
     useEffect(() => {
-        // 假設你的 API 路徑是 'https://api.example.com/lists'
         axios.get('/Chatroom/List')
             .then((response) => {
                 const parsedData = response.data.map(item => JSON.parse(item));
@@ -34,21 +34,33 @@ function ChatEntry() {
                 navigate(0);
             })
             .catch((error) => {
-                console.error("獲取資料時發生錯誤:", error);
+                console.error("創建聊天室時發生錯誤:", error);
                 navigate('/login');
             });
     }
 
     return (
-        <div>
-            <div>
-                <h3>創建聊天室</h3>
-                <input type={"text"}
-                       value={chatroomName}
-                       onChange={(e) => setChatroomName(e.target.value)}/>
-                <input type={"button"} onClick={CreateChatroom} value="創建"/>
+        <div className="container mt-5">
+            <div className="card p-4 shadow-sm mb-4">
+                <h3 className="text-center mb-4">創建聊天室</h3>
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        value={chatroomName}
+                        onChange={(e) => setChatroomName(e.target.value)}
+                        placeholder="輸入聊天室名稱"
+                    />
+                    <button
+                        className="btn btn-primary"
+                        onClick={CreateChatroom}
+                    >
+                        創建
+                    </button>
+                </div>
             </div>
-            <div className="list-container">
+
+            <div className="list-container row">
                 {lists.map((list) => (
                     <List id={list.id} name={list.name} key={list.hash}/>
                 ))}
@@ -63,9 +75,17 @@ function List({id, name}) {
     const EntryChatroom = () => {
         navigate(`/chat/chatroom/${name}`);
     };
+
     return (
-        <div className="chatroom-list" data-key={id} onClick={EntryChatroom}>
-            <h3>{name}</h3>
+        <div className="chatroom-list col-md-4 mb-3">
+            <div
+                className="card p-3 shadow-sm chatroom-item"
+                data-key={id}
+                onClick={EntryChatroom}
+                style={{ cursor: 'pointer' }}
+            >
+                <h5 className="text-center">{name}</h5>
+            </div>
         </div>
     );
 }

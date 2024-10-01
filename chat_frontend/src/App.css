@@ -1,0 +1,16 @@
+.App {
+    text-align: center;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.container {
+    max-width: 960px;
+}
+
+.nav-link {
+    font-size: 1.1rem;
+}

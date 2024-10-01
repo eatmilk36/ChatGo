@@ -3,6 +3,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import {getToken} from "../Common/LocalStorage.js";
 import axios from "../AxiosInterceptors.js";
 import {jwtDecode} from "jwt-decode";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/Chatroom.css';
 
 function Chatroom() {
     const navigate = useNavigate();
@@ -14,7 +16,6 @@ function Chatroom() {
 
     const connectWebSocket = () => {
         // 創建新的 WebSocket 連接
-        // socketRef.current = new WebSocket('ws://127.0.0.1:33925/ws?group=' + id);
         socketRef.current = new WebSocket('ws://[::1]:33925/ws?group=' + id);
 
         socketRef.current.onopen = () => {
@@ -33,7 +34,7 @@ function Chatroom() {
                     try {
                         const decodedToken = jwtDecode(token);
                         if (decodedToken.username === event.data.split(':')[2]) {
-                            console.log("踢出去")
+                            console.log("踢出去");
                             socketRef.current.close();
                             navigate('/login');
                         }
@@ -47,16 +48,6 @@ function Chatroom() {
             }
             setMessages((prevMessages) => [...prevMessages, newMessage]);
         };
-
-        // socketRef.current.onclose = (event) => {
-        //     console.log("WebSocket 連接已關閉，狀態碼:", event.code, "原因:", event.reason);
-        //     setIsConnected(false);  // 連接已關閉
-        //     // 自動重連
-        //     setTimeout(() => {
-        //         console.log("嘗試重新連接 WebSocket...");
-        //         connectWebSocket();  // 重連
-        //     }, 3000);  // 3 秒後重連
-        // };
 
         socketRef.current.onerror = (error) => {
             console.error("WebSocket 發生錯誤:", error);
@@ -101,21 +92,39 @@ function Chatroom() {
     };
 
     return (
-        <div>
-            <h2>Chatroom</h2>
-            <ul>
-                {messages.map((msg, index) => (
-                    <li key={index}>{msg}</li>
-                ))}
-            </ul>
-
-            <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Enter your message"
-            />
-            <button onClick={sendMessage} disabled={!isConnected}>Send Message</button>
+        <div className="container mt-5">
+            <div className="card chatroom-card shadow-sm">
+                <div className="card-header text-center">
+                    <h2>聊天室</h2>
+                </div>
+                <div className="card-body">
+                    <ul className="list-group message-list">
+                        {messages.map((msg, index) => (
+                            <li className="list-group-item" key={index}>
+                                {msg}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="card-footer">
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            className="form-control"
+                            placeholder="輸入訊息"
+                        />
+                        <button
+                            onClick={sendMessage}
+                            disabled={!isConnected}
+                            className="btn btn-primary"
+                        >
+                            發送訊息
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

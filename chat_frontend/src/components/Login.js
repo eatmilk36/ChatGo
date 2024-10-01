@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import axios from "../AxiosInterceptors.js";
 import {setToken} from "../Common/LocalStorage.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
     // 定義表單狀態
@@ -52,32 +53,41 @@ const Login = () => {
     }
 
     return (
-        <div style={{maxWidth: '400px', margin: '0 auto'}}>
-            <h2>登入</h2>
-            <div>
-                <label htmlFor="account">使用者名稱</label>
-                <input
-                    type="text"
-                    id="account"
-                    value={account}
-                    onChange={(e) => getAccount(e)}
-                    placeholder="輸入使用者名稱"
-                />
+        <div className="container mt-5">
+            <div className="card p-4 shadow-sm" style={{maxWidth: '400px', margin: '0 auto'}}>
+                <h2 className="text-center mb-4">登入</h2>
+                <div className="mb-3">
+                    <label htmlFor="account" className="form-label">使用者名稱</label>
+                    <input
+                        type="text"
+                        id="account"
+                        value={account}
+                        onChange={(e) => getAccount(e)}
+                        placeholder="輸入使用者名稱"
+                        className="form-control"
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="password" className="form-label">密碼</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => getPassword(e)}
+                        placeholder="輸入密碼"
+                        className="form-control"
+                    />
+                </div>
+                {error && <div className="alert alert-danger text-center">{error}</div>}
+                <div className="d-grid">
+                    <button
+                        onClick={handleLogin}
+                        disabled={loading}
+                        className="btn btn-primary">
+                        {loading ? '登入中...' : '登入'}
+                    </button>
+                </div>
             </div>
-            <div>
-                <label htmlFor="password">密碼</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => getPassword(e)}
-                    placeholder="輸入密碼"
-                />
-            </div>
-            {error && <p style={{color: 'red'}}>{error}</p>}
-            <button onClick={handleLogin} disabled={loading}>
-                {loading ? '登入中...' : '登入'}
-            </button>
         </div>
     );
 };
