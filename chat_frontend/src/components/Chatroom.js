@@ -44,7 +44,7 @@ function Chatroom() {
             }
             // 要解json
             const newMessage = JSON.parse(event.data)
-            setMessages((prevMessages) => [...prevMessages, newMessage.message]);
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
         };
 
         socketRef.current.onerror = (error) => {
@@ -66,7 +66,7 @@ function Chatroom() {
         axios.get('/Chatroom/Message?groupName=' + groupName)
             .then((response) => {
                 let parse = response.data.map(item => JSON.parse(item));
-                setMessages((prevMessages) => [...prevMessages, ...parse.map(data => data.message)]);
+                setMessages((prevMessages) => [...prevMessages, ...parse]);
             })
             .catch((error) => {
                 console.error("獲取資料時發生錯誤:", error);
@@ -83,10 +83,11 @@ function Chatroom() {
     // 發送訊息到 WebSocket 伺服器
     const sendMessage = () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            token = getToken();
+            token = jwtDecode(getToken());
             // 需要創建後段物件並序列化後傳送
             const data = {
                 userId: token.userId,
+                userName: token.username,
                 groupName: groupName,
                 message: inputValue,
                 timestamp: Date.now(), // 傳送當前時間戳
@@ -104,11 +105,17 @@ function Chatroom() {
                 <div className="card-header text-center">
                     <h2>聊天室</h2>
                 </div>
-                <div className="card-body">
+                <div className="card-body chatroom-messages">
                     <ul className="list-group message-list">
                         {messages.map((msg, index) => (
-                            <li className="list-group-item" key={index}>
-                                {msg}
+                            <li
+                                className={`list-group-item message-item ${
+                                    msg.userName === jwtDecode(getToken()).username ? 'message-own' : 'message-other'
+                                }`}
+                                key={index}
+                            >
+                                <span className="message-username">{msg.userName}</span>: <span
+                                className="message-text">{msg.message}</span>
                             </li>
                         ))}
                     </ul>

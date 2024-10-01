@@ -17,3 +17,49 @@
 .input-group {
     margin-top: 10px;
 }
+
+.chatroom-messages {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.message-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.message-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.message-own {
+    align-self: flex-end;
+    background-color: #d1e7dd;
+    color: #0f5132;
+    text-align: right;
+    margin-left: auto;
+}
+
+.message-other {
+    align-self: flex-start;
+    background-color: #e9ecef;
+    color: #495057;
+    text-align: left;
+    margin-right: auto;
+}
+
+.message-username {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.message-text {
+    word-break: break-word;
+}
