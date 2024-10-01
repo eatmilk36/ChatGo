@@ -39,7 +39,7 @@ func (h *Handler) LoginQueryHandler(c *gin.Context) {
 		return
 	}
 
-	jwt, _ := h.jwt.GenerateJWT(user.Account)
+	jwt, _ := h.jwt.GenerateJWT(user.Account, user.Id)
 
 	err = h.redis.SaveUserLogin(context.Background(), user.Account, jwt)
 

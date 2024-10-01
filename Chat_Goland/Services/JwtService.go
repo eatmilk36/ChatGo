@@ -4,6 +4,7 @@ import (
 	"Chat_Goland/Config"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -12,18 +13,20 @@ type JwtService struct{}
 
 // MyCustomClaims 定義自訂的 Claim 結構
 type MyCustomClaims struct {
+	UserId   string `json:"userId"`
 	Username string `json:"username"`
 	jwt.RegisteredClaims
 }
 
 // GenerateJWT 產生JWT Token
-func (j JwtService) GenerateJWT(username string) (string, error) {
+func (j JwtService) GenerateJWT(username string, id int) (string, error) {
 
 	// 設定過期時間
 	expirationTime := time.Now().Add(1 * time.Hour)
 
 	// 建立自訂的 Claims
 	claims := MyCustomClaims{
+		UserId:   strconv.Itoa(id),
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),

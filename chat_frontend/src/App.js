@@ -17,12 +17,16 @@ function App() {
     useEffect(() => {
         try {
             let token = getToken();
-            if (jwtDecode(token)) {
-                setIsLogin(true)
+            if (!!token === false) {
+                setIsLogin(false);
+                return;
             }
+            let jwtPayload = jwtDecode(token);
+            console.log(jwtPayload.username + '登入');
+            setIsLogin(true);
         } catch (error) {
-            setIsLogin(false)
-            console.log(error)
+            setIsLogin(false);
+            console.log(error.toString());
         }
     }, [location]);
 
@@ -69,7 +73,7 @@ function App() {
                     <Route path="/" element={<Home/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/chat/entry" element={<ChatEntry/>}/>
-                    <Route path="/chat/chatroom/:id" element={<Chatroom/>}/>
+                    <Route path="/chat/chatroom/:groupName" element={<Chatroom/>}/>
                 </Routes>
             </div>
         </div>

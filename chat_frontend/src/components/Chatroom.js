@@ -11,12 +11,13 @@ function Chatroom() {
     const [messages, setMessages] = useState([]);
     const socketRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
-    const {id} = useParams();
+    const {groupName} = useParams();
     const [isConnected, setIsConnected] = useState(false);
+    let token = null;
 
     const connectWebSocket = () => {
         // 創建新的 WebSocket 連接
-        socketRef.current = new WebSocket('ws://[::1]:33925/ws?group=' + id);
+        socketRef.current = new WebSocket('ws://[::1]:33925/ws?group=' + groupName);
 
         socketRef.current.onopen = () => {
             console.log("WebSocket 連接已建立");
@@ -24,12 +25,8 @@ function Chatroom() {
         };
 
         socketRef.current.onmessage = (event) => {
-            const newMessage = event.data;
             if (event.data.startsWith("/AdminKickUser:")) {
-                console.log(newMessage);
-
-                let token = getToken();
-
+                token = getToken();
                 if (token) {
                     try {
                         const decodedToken = jwtDecode(token);
@@ -43,10 +40,11 @@ function Chatroom() {
                         console.error('無效的 JWT:', error);
                     }
                 }
-
                 return;
             }
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
+            // 要解json
+            const newMessage = JSON.parse(event.data)
+            setMessages((prevMessages) => [...prevMessages, newMessage.message]);
         };
 
         socketRef.current.onerror = (error) => {
@@ -55,7 +53,7 @@ function Chatroom() {
     };
 
     useEffect(() => {
-        const token = getToken();
+        token = getToken();
         if (!token) {
             navigate('/login');
             return;
@@ -65,9 +63,10 @@ function Chatroom() {
         connectWebSocket();
 
         // 獲取初始訊息
-        axios.get('/Chatroom/Message?groupName=' + id)
+        axios.get('/Chatroom/Message?groupName=' + groupName)
             .then((response) => {
-                setMessages((prevMessages) => [...prevMessages, ...response.data]);
+                let parse = response.data.map(item => JSON.parse(item));
+                setMessages((prevMessages) => [...prevMessages, ...parse.map(data => data.message)]);
             })
             .catch((error) => {
                 console.error("獲取資料時發生錯誤:", error);
@@ -79,12 +78,20 @@ function Chatroom() {
                 socketRef.current.close();
             }
         };
-    }, [id, navigate]);
+    }, [groupName, navigate]);
 
     // 發送訊息到 WebSocket 伺服器
     const sendMessage = () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            socketRef.current.send(inputValue);  // 發送訊息
+            token = getToken();
+            // 需要創建後段物件並序列化後傳送
+            const data = {
+                userId: token.userId,
+                groupName: groupName,
+                message: inputValue,
+                timestamp: Date.now(), // 傳送當前時間戳
+            };
+            socketRef.current.send(JSON.stringify(data));  // 發送訊息
             setInputValue('');  // 清空輸入框
         } else {
             console.log("WebSocket 未連接，無法發送訊息");

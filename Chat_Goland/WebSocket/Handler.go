@@ -20,7 +20,6 @@ var upgrade = websocket.Upgrader{
 
 // WsHandler WebSocket 連接處理
 func WsHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("進入 WebSocket handler")
 	conn, err := upgrade.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("WebSocket 升級失敗:", err)
@@ -37,10 +36,8 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	if groupName == "" {
 		groupName = "default"
 	}
-	log.Printf("客戶端加入群組: %s", groupName)
 
 	SingleGroupManager.SingleGroupManager.JoinGroup(groupName, conn)
-	log.Printf("群組 %s 已加入", groupName)
 
 	for {
 		_, message, err := conn.ReadMessage()
@@ -54,8 +51,6 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
-		log.Printf("收到訊息: %s", string(message))
-
 		// 儲存訊息到 Redis，使用 goroutine 進行
 		go func() {
 			if err := saveMessage(groupName, message); err != nil {
@@ -67,7 +62,6 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 
 		// 轉發訊息給群組中的所有人
 		go SingleGroupManager.SingleGroupManager.SendToGroup(groupName, message)
-		log.Printf("訊息已轉發至群組 %s", groupName)
 	}
 }
 
@@ -75,6 +69,8 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 func saveMessage(groupName string, message []byte) error {
 	log.Println("正在儲存訊息到 Redis...")
 	ctx := context.Background()
+
+	log.Println("websocker:", string(message))
 
 	// 使用 NewRedisService 來初始化 RedisService
 	service := SingleRedisServer.SingleRedisServer

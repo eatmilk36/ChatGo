@@ -44,14 +44,15 @@ func main() {
 			}
 			// 處存到MySQL
 			var histories []ChatroomMessageHistory.Model
+			var temp ChatroomMessageHistory.Model
 			for _, m := range message {
-				history := ChatroomMessageHistory.Model{
-					UserId:    33,
-					GroupName: chatroom.Name,
-					Message:   m,
-					TimeStamp: time.Now().UnixMilli(),
+				err := json.Unmarshal([]byte(m), &temp)
+				if err != nil {
+					fmt.Println(err.Error() + m)
+					continue
 				}
-				histories = append(histories, history)
+
+				histories = append(histories, temp)
 			}
 
 			if len(histories) == 0 {
@@ -64,7 +65,7 @@ func main() {
 			}
 
 			marshal, _ := json.Marshal(histories)
-			fmt.Println("Success,data:", marshal)
+			fmt.Println("Success,data:", string(marshal))
 		}
 		fmt.Println("success")
 	})

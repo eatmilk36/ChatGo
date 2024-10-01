@@ -5,7 +5,7 @@ import (
 )
 
 type JwtServiceInterface interface {
-	GenerateJWT(username string) (string, error)
+	GenerateJWT(username string, id int) (string, error)
 
 	ValidateJWT(tokenString string) (*Services.MyCustomClaims, error)
 }
