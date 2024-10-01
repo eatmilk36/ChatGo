@@ -11,6 +11,11 @@ services:
       - "3306:3306"
     networks:
       - app_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:6
@@ -30,22 +35,34 @@ services:
 
   app:
     container_name: chat
+    # 到哪裡找到DockerFile
     build:
       context: ./Chat_Goland
+    # 容器裡面的工作路徑
     working_dir: /app
+    # 容器啟動後要做的第一件事
     command: [ "./myapp" ]
+    # Windows 路徑映射
     volumes:
-      - C:/logs:/var/log/myapp  # Windows 路徑映射
+      - C:/logs:/var/log/myapp
+    # 依賴其他容器啟動成功後才啟動
     depends_on:
       mysql:
-        condition: service_started
+        # 通過健康檢查成功後啟動(因為有可能容器啟動了但是裡面的服務還沒有就緒)
+        condition: service_healthy
+        # 只要服務起來就通過
       redis:
         condition: service_started
+    # 開放的Port
     ports:
+      # swagger 端口
       - "8080:8080"
-      - "33925:33925"  # WebSocket 端口
+      # WebSocket 端口
+      - "33925:33925"
+    # 環境變數
     environment:
       - ENVIRONMENT=production
+    # docker 內部網路
     networks:
       - app_network
 

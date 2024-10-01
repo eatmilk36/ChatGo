@@ -6,12 +6,12 @@ WORKDIR /app
 
 # 複製 go.mod 和 go.sum
 COPY go.mod go.sum ./
+
+# 下載所有依賴
 RUN go mod download
 
 # 複製所有 Go 源代碼
 COPY . ./
-
-RUN ls -al /app
 
 # 編譯 Go 程式
 RUN go build -o myapp .
