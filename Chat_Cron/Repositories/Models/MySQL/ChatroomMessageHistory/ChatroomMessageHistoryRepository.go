@@ -38,3 +38,12 @@ func (r *Repository) GetChatroomMessageHistoryRepositoryByAccountAndPassword(acc
 	}
 	return &chatroomMessageHistoryRepository, nil
 }
+
+func (r *Repository) GetLastTimeStamp() int64 {
+	var model Model
+	result := r.db.Order("TimeStamp DESC").First(&model)
+	if result.Error != nil {
+		return 0
+	}
+	return model.TimeStamp
+}

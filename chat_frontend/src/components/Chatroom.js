@@ -84,6 +84,7 @@ function Chatroom() {
         axios.get('/Chatroom/Message?groupName=' + groupName)
             .then((response) => {
                 let parse = response.data.map(item => JSON.parse(item));
+                parse.sort((a, b) => a.timestamp - b.timestamp);
                 setMessages((prevMessages) => [...prevMessages, ...parse]);
             })
             .catch((error) => {

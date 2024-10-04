@@ -34,6 +34,9 @@ func main() {
 		// 初始化 UserRepository
 		chatroomMessageHistoryRepo := ChatroomMessageHistory.NewChatroomMessageHistoryRepository(database)
 
+		// 取得 History message 最後更新時間
+		lastTimestamp := chatroomMessageHistoryRepo.GetLastTimeStamp()
+
 		for _, v := range list {
 			var chatroom = RedisModels.RedisChatroomModel{}
 			err := json.Unmarshal([]byte(v), &chatroom)
@@ -52,7 +55,9 @@ func main() {
 					continue
 				}
 
-				histories = append(histories, temp)
+				if lastTimestamp < temp.TimeStamp {
+					histories = append(histories, temp)
+				}
 			}
 
 			if len(histories) == 0 {
@@ -63,9 +68,6 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
-
-			marshal, _ := json.Marshal(histories)
-			fmt.Println("Success,data:", string(marshal))
 		}
 		fmt.Println("success")
 	})
