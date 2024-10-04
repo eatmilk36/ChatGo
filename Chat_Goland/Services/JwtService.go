@@ -1,7 +1,7 @@
 package Services
 
 import (
-	"Chat_Goland/Config"
+	"Chat_Goland/Single/SingleConfig"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"strconv"
@@ -38,7 +38,7 @@ func (j JwtService) GenerateJWT(username string, id int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// 簽名 Token 並返回作為字串
-	config, _ := Config.LoadConfig()
+	config := SingleConfig.SingleConfig
 	tokenString, err := token.SignedString([]byte(config.Jwt.SecretKey))
 	if err != nil {
 		return "", err
@@ -54,7 +54,7 @@ func (j JwtService) ValidateJWT(tokenString string) (*MyCustomClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		config, _ := Config.LoadConfig()
+		config := SingleConfig.SingleConfig
 		return []byte(config.Jwt.SecretKey), nil
 	})
 

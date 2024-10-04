@@ -14,12 +14,6 @@ type Repository struct {
 }
 
 func (repo Repository) InitDatabase() *gorm.DB {
-	//config, err2 := Config.LoadConfig()
-
-	//if err2 != nil {
-	//	panic("Config file load failed")
-	//}
-
 	config := SingleConfig.SingleConfig
 
 	addr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True",

@@ -47,7 +47,7 @@ type NgrokConfig struct {
 }
 
 // LoadConfig 讀取 YAML 配置
-func LoadConfig() (*Config, error) {
+func LoadConfig() *Config {
 	env := os.Getenv("ENVIRONMENT")
 
 	configFile := ""
@@ -61,7 +61,7 @@ func LoadConfig() (*Config, error) {
 	}
 	file, err := os.Open(configFile)
 	if err != nil {
-		return nil, err
+		panic("Config load fail")
 	}
 
 	defer func(file *os.File) {
@@ -72,8 +72,8 @@ func LoadConfig() (*Config, error) {
 	decoder := yaml.NewDecoder(file)
 	err = decoder.Decode(&config)
 	if err != nil {
-		return nil, err
+		panic("Config load fail")
 	}
 
-	return &config, nil
+	return &config
 }
