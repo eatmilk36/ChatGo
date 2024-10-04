@@ -112,7 +112,7 @@ function Chatroom() {
             token = jwtDecode(getToken());
             // 需要創建後段物件並序列化後傳送
             const data = {
-                userId: token.userId,
+                userId: Number(token.userId),
                 userName: token.username,
                 groupName: groupName,
                 message: inputValue,
