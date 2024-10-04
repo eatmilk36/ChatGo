@@ -23,7 +23,7 @@ const Login = () => {
 
             try {
                 // 發送 API 請求來進行後端驗證
-                const response = await axios.post('/User/Login', {
+                const response = await axios.post('User/Login', {
                     account: account,
                     password: password,
                 });

@@ -66,16 +66,18 @@ services:
     networks:
       - app_network
 
-#  frontend:
-#    container_name: frontend
-#    build:
-#      context: ./chat_frontend
-#      dockerfile: Dockerfile
-#    working_dir: /app
-#    ports:
-#      - "80:80"
-#    networks:
-#      - app_network
+  frontend:
+    container_name: frontend
+    build:
+      context: ./chat_frontend
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - "80:80"
+    networks:
+      - app_network
+    environment:
+      - NODE_ENV=production
 #
 #  cron:
 #    container_name: chat_cron
@@ -132,14 +134,18 @@ services:
 #    networks:
 #      - app_network
 #
-#  alpine:
-#    image: alpine:latest
-#    container_name: alpine_test
-#    command: sh -c "while true; do sleep 1000; done"
-#    networks:
-#      - app_network
-#    stdin_open: true  # 允許你通過 'docker exec' 進行交互式操作
-#    tty: true         # 配置容器為TTY模式
+  alpine:
+    image: nginx:latest # 使用 nginx 官方映像檔
+    container_name: alpine_proxy
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro # 將自定義的 Nginx 配置文件掛載到容器中
+    ports:
+      - "59233:80" # 將宿主機的 59233 埠映射到容器的 80 埠
+    networks:
+      - app_network
+    depends_on:
+      app:
+        condition: service_started
 
 networks:
   app_network:

@@ -1,7 +1,7 @@
 package Repositories
 
 import (
-	"Chat_Goland/Config"
+	"Chat_Goland/Single/SingleConfig"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -14,10 +14,14 @@ type Repository struct {
 }
 
 func (repo Repository) InitDatabase() *gorm.DB {
-	config, err2 := Config.LoadConfig()
-	if err2 != nil {
-		panic("Config file load failed")
-	}
+	//config, err2 := Config.LoadConfig()
+
+	//if err2 != nil {
+	//	panic("Config file load failed")
+	//}
+
+	config := SingleConfig.SingleConfig
+
 	addr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True",
 		config.MySql.UserName, config.MySql.Password, config.MySql.Address, config.MySql.Port, config.MySql.Database)
 	var err error

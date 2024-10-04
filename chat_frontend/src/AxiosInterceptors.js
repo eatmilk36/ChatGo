@@ -1,9 +1,10 @@
 import axios from 'axios';
 import {getToken} from "./Common/LocalStorage.js";
+import {apiUrl} from "./Config.js"
 
 // 創建 Axios 實例
 const axiosInstance = axios.create({
-    baseURL: 'http://127.0.0.1:8080', // 基本 URL，可以替換成你的 API URL
+    baseURL: apiUrl + '/api/', // 基本 URL，可以替換成你的 API URL
     headers: {
         'Content-Type': 'application/json'
     },

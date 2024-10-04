@@ -11,6 +11,7 @@ type Config struct {
 	Redis RedisConfig `yaml:"redis"`
 	MySql MySqlConfig `yaml:"mysql"`
 	Jwt   JwtConfig   `yaml:"Jwt"`
+	Ngrok NgrokConfig `yaml:"ngrok"`
 }
 
 // RedisConfig 定義 Redis 配置結構
@@ -39,6 +40,10 @@ type MySqlConfig struct {
 
 type JwtConfig struct {
 	SecretKey string `yaml:"secret_key"`
+}
+
+type NgrokConfig struct {
+	Url string `yaml:"Url"`
 }
 
 // LoadConfig 讀取 YAML 配置

@@ -7,6 +7,7 @@ import (
 	"Chat_Goland/Repositories"
 	"Chat_Goland/Repositories/Models/MySQL/User"
 	"Chat_Goland/Services"
+	"Chat_Goland/Single/SingleConfig"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -17,8 +18,9 @@ import (
 func RouterInit() {
 	server := gin.Default()
 
+	config := SingleConfig.SingleConfig
 	server.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://127.0.0.1:80", "http://172.30.240.1:80", "http://localhost", "http://localhost:80", "http://localhost:3000"},
+		AllowOrigins:     []string{config.Ngrok.Url, "http://127.0.0.1:80", "http://172.30.240.1:80", "http://localhost", "http://localhost:80", "http://localhost:3000", "http://localhost:59233"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
@@ -43,14 +45,14 @@ func RouterInit() {
 		})
 	}
 
-	user := server.Group("/User")
+	user := server.Group("/api/User")
 	{
 		userController := InitUserController()
 		user.POST("/Login", userController.GetUser)
 		user.POST("/Create", userController.CreateUser)
 	}
 
-	chatroom := server.Group("/Chatroom")
+	chatroom := server.Group("/api/Chatroom")
 	{
 		chatroomController := InitChatroomController()
 		chatroom.GET("/List", chatroomController.GetChatList)

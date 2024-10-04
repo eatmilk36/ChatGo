@@ -3,6 +3,7 @@ package Redis
 import (
 	"Chat_Goland/Config"
 	"Chat_Goland/Repositories/Models/RedisModels"
+	"Chat_Goland/Single/SingleConfig"
 	"Chat_Goland/Single/SingleGroupManager"
 	"context"
 	"encoding/json"
@@ -18,10 +19,11 @@ type RedisService struct {
 }
 
 func NewRedisService() *RedisService {
-	config, err := Config.LoadConfig()
-	if err != nil {
-		panic("config loading failed")
-	}
+	//config, err := Config.LoadConfig()
+	//if err != nil {
+	//	panic("config loading failed")
+	//}
+	config := SingleConfig.SingleConfig
 	return &RedisService{client: NewRedisClient(&config.Redis)}
 }
 

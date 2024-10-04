@@ -5,6 +5,7 @@ import axios from "../AxiosInterceptors.js";
 import {jwtDecode} from "jwt-decode";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/Chatroom.css';
+import {websocketUrl} from '../Config.js';
 
 function Chatroom() {
     const navigate = useNavigate();
@@ -13,11 +14,17 @@ function Chatroom() {
     const [inputValue, setInputValue] = useState('');
     const {groupName} = useParams();
     const [isConnected, setIsConnected] = useState(false);
+    const messagesEndRef = useRef(null); // 用於滾動至底部
+    const [shouldReconnect, setShouldReconnect] = useState(true);
     let token = null;
 
     const connectWebSocket = () => {
+        if (socketRef.current && (socketRef.current.readyState === WebSocket.OPEN || socketRef.current.readyState === WebSocket.CONNECTING)) {
+            return; // 如果已經連接或正在連接中，則不再創建新的連接
+        }
+
         // 創建新的 WebSocket 連接
-        socketRef.current = new WebSocket('ws://[::1]:33925/ws?group=' + groupName);
+        socketRef.current = new WebSocket(websocketUrl + '/ws?group=' + groupName);
 
         socketRef.current.onopen = () => {
             console.log("WebSocket 連接已建立");
@@ -35,7 +42,6 @@ function Chatroom() {
                             socketRef.current.close();
                             navigate('/login');
                         }
-
                     } catch (error) {
                         console.error('無效的 JWT:', error);
                     }
@@ -43,12 +49,24 @@ function Chatroom() {
                 return;
             }
             // 要解json
-            const newMessage = JSON.parse(event.data)
+            const newMessage = JSON.parse(event.data);
             setMessages((prevMessages) => [...prevMessages, newMessage]);
         };
 
         socketRef.current.onerror = (error) => {
             console.error("WebSocket 發生錯誤:", error);
+        };
+
+        socketRef.current.onclose = () => {
+            console.log("WebSocket 已關閉");
+            setIsConnected(false);
+            if (shouldReconnect) {
+                // 嘗試在 3 秒後重新連接
+                setTimeout(() => {
+                    console.log("嘗試重新連接 WebSocket");
+                    connectWebSocket();
+                }, 3000);
+            }
         };
     };
 
@@ -74,11 +92,19 @@ function Chatroom() {
 
         // 清理 WebSocket 連接
         return () => {
+            setShouldReconnect(false); // 在組件卸載時設置不再重連
             if (socketRef.current) {
                 socketRef.current.close();
             }
         };
     }, [groupName, navigate]);
+
+    // 滾動至最新訊息
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
+        }
+    }, [messages]);
 
     // 發送訊息到 WebSocket 伺服器
     const sendMessage = () => {
@@ -96,6 +122,13 @@ function Chatroom() {
             setInputValue('');  // 清空輸入框
         } else {
             console.log("WebSocket 未連接，無法發送訊息");
+        }
+    };
+
+    // 處理按下 Enter 發送訊息
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
         }
     };
 
@@ -118,6 +151,8 @@ function Chatroom() {
                                 className="message-text">{msg.message}</span>
                             </li>
                         ))}
+                        <div ref={messagesEndRef}/>
+                        {/* 用於滾動至底部 */}
                     </ul>
                 </div>
                 <div className="card-footer">
@@ -126,6 +161,7 @@ function Chatroom() {
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={handleKeyDown} // 加入按下 Enter 時送出訊息的事件
                             className="form-control"
                             placeholder="輸入訊息"
                         />

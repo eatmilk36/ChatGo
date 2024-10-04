@@ -20,3 +20,6 @@ mysql:
 
 Jwt:
   SecretKey: "d86ecd989966768001ae86ac7069a699c15fe9b2cb10ee27f538cf36108c7a71"
+
+ngrok:
+  Url: "localhost:8080"

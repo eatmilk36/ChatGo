@@ -10,9 +10,9 @@ import (
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 忽略 JWT 驗證
-		if c.Request.URL.Path == "/User/Login" ||
+		if c.Request.URL.Path == "/api/User/Login" ||
 			strings.HasPrefix(c.Request.URL.Path, "/swagger/") ||
-			c.Request.URL.Path == "/User/Create" {
+			c.Request.URL.Path == "/api/User/Create" {
 			c.Next()
 			return
 		}
