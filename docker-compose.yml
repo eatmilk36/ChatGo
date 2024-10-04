@@ -78,62 +78,62 @@ services:
       - app_network
     environment:
       - NODE_ENV=production
-#
-#  cron:
-#    container_name: chat_cron
-#    build:
-#      context: ./Chat_Cron
-#    working_dir: /app
-#    command: [ "./myapp-cron" ] # 根據你的排程應用名稱修改
-#    depends_on:
-#      mysql:
-#        condition: service_started
-#      redis:
-#        condition: service_started
-#    environment:
-#      - ENVIRONMENT=production
-#    networks:
-#      - app_network
-#
-#  loki:
-#    image: grafana/loki:2.9.1
-#    container_name: loki
-#    ports:
-#      - "3100:3100"
-#    user: "root"
-#    volumes:
-#      - C:/logs:/var/log/myapp
-#      - ./loki-config:/etc/loki/
-#      - C:/loki-data:/var/loki  # 將容器內的 /var/loki 目錄映射到宿主機
-#    command: -config.file=/etc/loki/loki.yaml
-#    networks:
-#      - app_network
-#
-#  promtail:
-#    image: grafana/promtail:2.9.1
-#    container_name: promtail
-#    ports:
-#      - "9080:9080"
-#    volumes:
-#      - ./promtail-config:/etc/promtail/
-#      - C:/logs:/var/log
-#    command: -config.file=/etc/promtail/promtail.yaml
-#    networks:
-#      - app_network
-#
-#  # 查看需要把在頁面上把loki設定成http:loki:3100 跟 搜尋條件要改成{job="varlogs"}
-#  grafana:
-#    image: grafana/grafana:latest
-#    container_name: grafana_compose
-#    ports:
-#      - "3000:3000"
-#    volumes:
-#      - grafana-data:/var/lib/grafana
-#    environment:
-#      - GF_SECURITY_ADMIN_PASSWORD=admin
-#    networks:
-#      - app_network
-#
+
+  cron:
+    container_name: chat_cron
+    build:
+      context: ./Chat_Cron
+    working_dir: /app
+    command: [ "./myapp-cron" ] # 根據你的排程應用名稱修改
+    depends_on:
+      mysql:
+        condition: service_started
+      redis:
+        condition: service_started
+    environment:
+      - ENVIRONMENT=production
+    networks:
+      - app_network
+
+  loki:
+    image: grafana/loki:2.9.1
+    container_name: loki
+    ports:
+      - "3100:3100"
+    user: "root"
+    volumes:
+      - C:/logs:/var/log/myapp
+      - ./loki-config:/etc/loki/
+      - C:/loki-data:/var/loki  # 將容器內的 /var/loki 目錄映射到宿主機
+    command: -config.file=/etc/loki/loki.yaml
+    networks:
+      - app_network
+
+  promtail:
+    image: grafana/promtail:2.9.1
+    container_name: promtail
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./promtail-config:/etc/promtail/
+      - C:/logs:/var/log
+    command: -config.file=/etc/promtail/promtail.yaml
+    networks:
+      - app_network
+
+  # 查看需要把在頁面上把loki設定成http:loki:3100 跟 搜尋條件要改成{job="varlogs"}
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_compose
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - app_network
+
   alpine:
     image: nginx:latest # 使用 nginx 官方映像檔
     container_name: alpine_proxy
