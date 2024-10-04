@@ -15,12 +15,13 @@ function Chatroom() {
     const {groupName} = useParams();
     const [isConnected, setIsConnected] = useState(false);
     const messagesEndRef = useRef(null); // 用於滾動至底部
-    const [shouldReconnect, setShouldReconnect] = useState(true);
+    const shouldReconnectRef = useRef(true); // 使用 useRef 來保留組件的掛載狀態
     let token = null;
 
     const connectWebSocket = () => {
+        // 如果已經連接或正在連接中，則不再創建新的連接
         if (socketRef.current && (socketRef.current.readyState === WebSocket.OPEN || socketRef.current.readyState === WebSocket.CONNECTING)) {
-            return; // 如果已經連接或正在連接中，則不再創建新的連接
+            return;
         }
 
         // 創建新的 WebSocket 連接
@@ -39,6 +40,7 @@ function Chatroom() {
                         const decodedToken = jwtDecode(token);
                         if (decodedToken.username === event.data.split(':')[2]) {
                             console.log("踢出去");
+                            shouldReconnectRef.current = false; // 停止重連
                             socketRef.current.close();
                             navigate('/login');
                         }
@@ -60,8 +62,8 @@ function Chatroom() {
         socketRef.current.onclose = () => {
             console.log("WebSocket 已關閉");
             setIsConnected(false);
-            if (shouldReconnect) {
-                // 嘗試在 3 秒後重新連接
+            // 如果允許重連且組件仍掛載，則嘗試在 3 秒後重新連接
+            if (shouldReconnectRef.current) {
                 setTimeout(() => {
                     console.log("嘗試重新連接 WebSocket");
                     connectWebSocket();
@@ -91,9 +93,9 @@ function Chatroom() {
                 console.error("獲取資料時發生錯誤:", error);
             });
 
-        // 清理 WebSocket 連接
+        // 在組件卸載時清理 WebSocket 連接
         return () => {
-            setShouldReconnect(false); // 在組件卸載時設置不再重連
+            shouldReconnectRef.current = false; // 設置不再重連
             if (socketRef.current) {
                 socketRef.current.close();
             }
