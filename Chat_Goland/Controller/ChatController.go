@@ -10,13 +10,13 @@ import (
 
 type ChatroomController struct {
 	redisService Interface.RedisServiceInterface
-	log          Interface.LogServiceInterface
+	logService   Interface.LogServiceInterface
 }
 
 func NewChatroomController(redis Interface.RedisServiceInterface, log Interface.LogServiceInterface) *ChatroomController {
 	return &ChatroomController{
 		redisService: redis,
-		log:          log,
+		logService:   log,
 	}
 }
 
@@ -32,7 +32,7 @@ func NewChatroomController(redis Interface.RedisServiceInterface, log Interface.
 // @Router /Chatroom/List [Get]
 func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 	// 注入到 LoginHandler
-	ChatroomList.NewChatListQueryHandler(ctrl.redisService, ctrl.log).GetChatroomList(c)
+	ChatroomList.NewChatListQueryHandler(ctrl.redisService, ctrl.logService).GetChatroomList(c)
 }
 
 // CreateChatroom godoc
@@ -47,7 +47,7 @@ func (ctrl ChatroomController) GetChatList(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "Not Found"
 // @Router /Chatroom/Create [Post]
 func (ctrl ChatroomController) CreateChatroom(c *gin.Context) {
-	ChatroomCreate.NewChatroomCreateHandler(ctrl.redisService).SetChatroomList(c)
+	ChatroomCreate.NewChatroomCreateHandler(ctrl.redisService, ctrl.logService).SetChatroomList(c)
 }
 
 // GetGroupMessage godoc
