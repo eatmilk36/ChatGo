@@ -6,6 +6,7 @@ import ChatEntry from "./components/ChatEntry.js";
 import Chatroom from "./components/Chatroom.js";
 import {jwtDecode} from "jwt-decode";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './App.css';
 import {getToken, removeToken} from "./Common/LocalStorage.js";
 
@@ -31,7 +32,7 @@ function App() {
     }, [location]);
 
     const Logout = () => {
-        removeToken() // 假設你有一個方法來移除 token
+        removeToken(); // 假設你有一個方法來移除 token
         setIsLogin(false);
         navigate('/login');
     };
@@ -60,7 +61,7 @@ function App() {
                                 </li>
                             ) : (
                                 <li className="nav-item">
-                                    <button className="nav-link btn btn-link" onClick={Logout}>Logout</button>
+                                    <Link className="nav-link" to="#" onClick={Logout}>Logout</Link>
                                 </li>
                             )}
                         </ul>

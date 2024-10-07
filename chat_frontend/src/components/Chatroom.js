@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {getToken} from "../Common/LocalStorage.js";
+import {getToken, removeToken} from "../Common/LocalStorage.js";
 import axios from "../AxiosInterceptors.js";
 import {jwtDecode} from "jwt-decode";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,6 +42,7 @@ function Chatroom() {
                             console.log("踢出去");
                             shouldReconnectRef.current = false; // 停止重連
                             socketRef.current.close();
+                            removeToken();
                             navigate('/login');
                         }
                     } catch (error) {
