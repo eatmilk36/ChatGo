@@ -35,7 +35,7 @@ func (h *Handler) LoginQueryHandler(c *gin.Context) {
 
 	if err != nil || user == nil {
 		h.log.LogError("Create User Failed User Not Found")
-		c.JSON(http.StatusBadRequest, "user not found")
+		c.JSON(http.StatusBadRequest, "User not found")
 		return
 	}
 
@@ -50,6 +50,6 @@ func (h *Handler) LoginQueryHandler(c *gin.Context) {
 	}
 
 	marshal, _ := json.Marshal(user)
-	h.log.LogDebug("Create User Success :" + string(marshal))
+	h.log.LogDebug("User login success :" + string(marshal))
 	c.JSON(http.StatusOK, jwt)
 }

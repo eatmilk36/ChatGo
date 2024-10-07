@@ -10,10 +10,11 @@ import (
 
 type ChatroomCreateHandler struct {
 	redis Interface.RedisServiceInterface
+	log   Interface.LogServiceInterface
 }
 
-func NewChatroomCreateHandler(redis Interface.RedisServiceInterface) *ChatroomCreateHandler {
-	return &ChatroomCreateHandler{redis: redis}
+func NewChatroomCreateHandler(redis Interface.RedisServiceInterface, log Interface.LogServiceInterface) *ChatroomCreateHandler {
+	return &ChatroomCreateHandler{redis: redis, log: log}
 }
 
 func (h *ChatroomCreateHandler) SetChatroomList(c *gin.Context) {
@@ -36,6 +37,8 @@ func (h *ChatroomCreateHandler) SetChatroomList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "Redis failed")
 		return
 	}
+
+	h.log.LogDebug("Create Chatroom Success:" + req.Name)
 
 	c.JSON(http.StatusOK, "ok")
 }

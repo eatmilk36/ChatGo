@@ -51,5 +51,5 @@ func (ctrl UserController) GetUser(c *gin.Context) {
 // @Failure 404 {object} map[string]interface{} "Created Model Failed"
 // @Router /user/Create [post]
 func (ctrl UserController) CreateUser(c *gin.Context) {
-	Create.NewLoginHandler(ctrl.userRepo, ctrl.cryptoService).CreatUserCommand(c)
+	Create.NewLoginHandler(ctrl.userRepo, ctrl.cryptoService, ctrl.logService).CreatUserCommand(c)
 }
