@@ -63,3 +63,32 @@
 .message-text {
     word-break: break-word;
 }
+
+/* 自訂卷軸樣式 */
+.message-list, .chatroom-messages {
+    overflow-y: auto;
+    scrollbar-width: thin; /* 適用於 Firefox */
+    scrollbar-color: #007bff #f1f1f1; /* 滾動條顏色，前者是滾動條，後者是背景 */
+}
+
+.message-list::-webkit-scrollbar,
+.chatroom-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.message-list::-webkit-scrollbar-thumb,
+.chatroom-messages::-webkit-scrollbar-thumb {
+    background-color: #007bff; /* 更改卷軸顏色 */
+    border-radius: 10px; /* 使卷軸更圓滑 */
+}
+
+.message-list::-webkit-scrollbar-thumb:hover,
+.chatroom-messages::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3; /* 滑鼠懸停時改變卷軸顏色 */
+}
+
+.message-list::-webkit-scrollbar-track,
+.chatroom-messages::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* 滑道背景顏色 */
+    border-radius: 10px;
+}
